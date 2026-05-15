@@ -42,7 +42,6 @@ namespace _3dShop.Api.Data.Configurations
             builder.Property(u => u.UpdatedAt)
                 .IsRequired();
 
-
             builder.HasMany(u => u.Orders)
                 .WithOne(o => o.Customer)
                 .HasForeignKey(o => o.CustomerId)
@@ -57,6 +56,8 @@ namespace _3dShop.Api.Data.Configurations
                 .WithOne(c => c.Customer)
                 .HasForeignKey<Cart>(c => c.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Navigation(p => p.Cart).AutoInclude(false);
         }
     }
 }

@@ -25,13 +25,6 @@ namespace _3dShop.Api.Data.Configurations
 
             builder.Property(u => u.UpdatedAt)
                 .IsRequired();
-
-            builder.HasMany(c => c.ProductList)
-                .WithOne(p => p.Category)
-                .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
-                
-
         }
     }
 }
