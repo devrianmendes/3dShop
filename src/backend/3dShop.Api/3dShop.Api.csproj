@@ -25,9 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Data\Configurations\" />
-    <Folder Include="Models\Entities\" />
-    <Folder Include="Models\Enums\" />
     <Folder Include="Models\DTOs\" />
     <Folder Include="Models\ValueObjects\" />
     <Folder Include="Helpers\" />

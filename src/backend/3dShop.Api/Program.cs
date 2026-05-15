@@ -1,6 +1,5 @@
 using _3dShop.Api.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.WebEncoders.Testing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +20,18 @@ var options = new DbContextOptionsBuilder<AppDbContext>()
 //using var teste = new AppDbContext(options);
 try
 {
-    using var teste = new AppDbContext(options);
-    teste.Database.OpenConnection(); // força a abertura
-    Console.WriteLine("Conexão OK!");
-    teste.Database.CloseConnection();
+    using var dbInstance = new AppDbContext(options);
+    bool conTest = dbInstance.Database.CanConnect();
+
+    if (conTest)
+    {
+        Console.WriteLine("Connection success.");
+
+    }
+    else
+    {
+        Console.WriteLine("Connection failure.");
+    }
 }
 catch (Exception ex)
 {

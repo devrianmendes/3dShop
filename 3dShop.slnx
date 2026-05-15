@@ -4,4 +4,7 @@
     <Project Path="src/backend/3dShop.Api/3dShop.Api.csproj" />
   </Folder>
   <Folder Name="/src/backend/tests/" />
+  <Folder Name="/src/backend/tests/Integration/">
+    <File Path="CheckDatabaseConnection.cs" />
+  </Folder>
 </Solution>
