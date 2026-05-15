@@ -1,0 +1,6 @@
+@_3dShop.Api_HostAddress = http://localhost:5199
+
+GET {{_3dShop.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

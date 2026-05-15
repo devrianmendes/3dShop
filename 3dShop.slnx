@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/backend/">
+    <Project Path="src/backend/3dShop.Api/3dShop.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/backend/tests/" />
+</Solution>
