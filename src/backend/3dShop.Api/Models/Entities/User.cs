@@ -8,6 +8,7 @@ namespace _3dShop.Api.Models.Entities
         public required string Email { get; set; }
         public required string PasswordHash { get; set; }
         public required UserRole UserRole { get; set; }
+        public required bool IsActive { get; set; } 
 
         //Releations
         public ICollection<Order>? Orders { get; set; }
