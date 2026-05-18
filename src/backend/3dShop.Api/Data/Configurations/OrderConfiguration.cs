@@ -23,6 +23,7 @@ namespace _3dShop.Api.Data.Configurations
             builder.Property(o => o.Status)
                 .IsRequired()
                 .HasMaxLength(30)
+                .HasConversion<string>()
                 .HasColumnType("VARCHAR(30)");
 
             builder.Property(o => o.ShippingStreet)
@@ -54,7 +55,7 @@ namespace _3dShop.Api.Data.Configurations
                .HasMaxLength(2)
                .HasColumnType("VARCHAR(2)");
 
-            builder.Property(o => o.ShippingCity)
+            builder.Property(o => o.ShippingZipCode)
                .IsRequired()
                .HasMaxLength(9)
                .HasColumnType("VARCHAR(9)");
@@ -95,6 +96,9 @@ namespace _3dShop.Api.Data.Configurations
                 .WithMany(u => u.OrderList)
                 .HasForeignKey(o => o.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Navigation(o => o.Customer)
+                .AutoInclude(false);
         }
     }
 }

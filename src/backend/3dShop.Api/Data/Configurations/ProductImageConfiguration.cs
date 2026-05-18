@@ -8,19 +8,22 @@ namespace _3dShop.Api.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ProductImage> builder)
         {
-            builder.ToTable("productImages");
+            builder.ToTable("product_images");
             builder.HasKey(pi => pi.Id);
 
             builder.Property(pi => pi.Url)
                 .IsRequired()
+                .HasColumnType("VARCHAR(500)")
                 .HasMaxLength(500);
 
             builder.Property(pi => pi.IsMain)
                 .IsRequired()
+                .HasColumnType("bool")
                 .HasDefaultValue(false);
 
             builder.Property(pi => pi.DisplayOrder)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("int");
 
             builder.HasOne(pi => pi.Product)
                 .WithMany(p => p.ProductImageList)
