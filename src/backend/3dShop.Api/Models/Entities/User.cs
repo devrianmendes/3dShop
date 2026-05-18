@@ -11,7 +11,7 @@ namespace _3dShop.Api.Models.Entities
         public required bool IsActive { get; set; } 
 
         //Releations
-        public ICollection<Order>? Orders { get; set; }
+        public ICollection<Order>? OrderList { get; set; }
         public ICollection<OrderStatusHistory>? OrderStatusHistory { get; set; }
         public Cart? Cart { get; set; }
     }
