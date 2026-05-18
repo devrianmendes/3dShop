@@ -41,7 +41,7 @@ namespace _3dShop.Api.Data.Configurations
             builder.Property(u => u.UpdatedAt)
                 .IsRequired();
 
-            builder.HasMany(u => u.Orders)
+            builder.HasMany(u => u.OrderList)
                 .WithOne(o => o.Customer)
                 .HasForeignKey(o => o.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);

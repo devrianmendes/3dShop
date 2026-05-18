@@ -30,6 +30,14 @@ namespace _3dShop.Api.Data.Configurations
                 .HasPrecision(10, 2)
                 .HasColumnType("numeric(10,2)");
 
+            builder.Property(p => p.CreatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp");
+
+            builder.Property(p => p.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp");
+
             builder.HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItemList)
                 .HasForeignKey(oi => oi.OrderId)

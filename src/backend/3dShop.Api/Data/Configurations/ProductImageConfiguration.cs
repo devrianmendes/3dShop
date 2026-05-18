@@ -25,6 +25,14 @@ namespace _3dShop.Api.Data.Configurations
                 .IsRequired()
                 .HasColumnType("int");
 
+            builder.Property(p => p.CreatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp");
+
+            builder.Property(p => p.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp");
+
             builder.HasOne(pi => pi.Product)
                 .WithMany(p => p.ProductImageList)
                 .HasForeignKey(pi => pi.ProductId)

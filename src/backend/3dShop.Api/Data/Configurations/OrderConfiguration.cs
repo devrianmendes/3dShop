@@ -92,6 +92,14 @@ namespace _3dShop.Api.Data.Configurations
             builder.Property(o => o.Notes)
                 .HasColumnType("text");
 
+            builder.Property(p => p.CreatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp");
+
+            builder.Property(p => p.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp");
+
             builder.HasOne(o => o.Customer)
                 .WithMany(u => u.OrderList)
                 .HasForeignKey(o => o.CustomerId)
