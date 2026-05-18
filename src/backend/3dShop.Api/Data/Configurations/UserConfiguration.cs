@@ -18,7 +18,6 @@ namespace _3dShop.Api.Data.Configurations
             builder.HasIndex(u => u.Email)
                 .IsUnique();
 
-
             builder.Property(u => u.Name)
                 .IsRequired()
                 .HasMaxLength(150);

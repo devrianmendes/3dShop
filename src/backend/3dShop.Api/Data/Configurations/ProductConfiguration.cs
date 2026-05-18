@@ -61,6 +61,15 @@ namespace _3dShop.Api.Data.Configurations
 
             builder.Navigation(p => p.Category)
                 .AutoInclude(false);
+
+            builder.Navigation(p => p.ProductImageList)
+                .AutoInclude(false);
+
+            builder.Navigation(p => p.OrderItemList)
+                .AutoInclude(false);
+
+            builder.Navigation(p => p.CartItemList)
+                .AutoInclude(false);
         }
     }
 }
