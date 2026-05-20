@@ -20,43 +20,33 @@ namespace _3dShop.Api.Data.Configurations
 
             builder.Property(u => u.Name)
                 .IsRequired()
-                .HasMaxLength(150);
+                .HasMaxLength(150)
+                .HasColumnType("VARCHAR(150)");
 
             builder.Property(u => u.Email)
                 .IsRequired()
-                .HasMaxLength(255);
-
+                .HasMaxLength(255)
+                .HasColumnType("VARCHAR(255)");
+            
             builder.Property(u => u.PasswordHash)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .HasColumnType("VARCHAR(255)");
+            ;
 
             builder.Property(u => u.UserRole)
                 .IsRequired()
                 .HasConversion<string>()
+                .HasColumnType("VARCHAR(20)")
                 .HasMaxLength(20);
 
             builder.Property(u => u.CreatedAt)
-                .IsRequired();
-
+                .IsRequired()
+                .HasColumnType("timestamp");
+           
             builder.Property(u => u.UpdatedAt)
-                .IsRequired();
-
-            builder.HasMany(u => u.OrderList)
-                .WithOne(o => o.Customer)
-                .HasForeignKey(o => o.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(u => u.OrderStatusHistory)
-                .WithOne(o => o.User)
-                .HasForeignKey(u => u.ChangedByUserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(u => u.Cart)
-                .WithOne(c => c.Customer)
-                .HasForeignKey<Cart>(c => c.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Navigation(p => p.Cart).AutoInclude(false);
+                .IsRequired()
+                .HasColumnType("timestamp");
         }
     }
 }

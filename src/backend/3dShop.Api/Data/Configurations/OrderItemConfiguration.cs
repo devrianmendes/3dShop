@@ -8,8 +8,11 @@ namespace _3dShop.Api.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
-            builder.ToTable("order_item");
+            builder.ToTable("order_items");
             builder.HasKey(oi => oi.Id);
+
+            builder.HasIndex(oi => oi.OrderId);
+            builder.HasIndex(oi => oi.ProductId);
 
             builder.Property(oi => oi.ProductNameSnapshot)
                 .IsRequired()
@@ -49,9 +52,6 @@ namespace _3dShop.Api.Data.Configurations
                 .HasForeignKey(oi => oi.ProductId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_OrderItem_Product_ProductItem");
-
-            builder.Navigation(oi => oi.Order).AutoInclude(false);
-            builder.Navigation(oi => oi.Product).AutoInclude(false);
         }
     }
 }

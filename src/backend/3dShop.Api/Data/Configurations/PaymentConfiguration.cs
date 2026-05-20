@@ -10,8 +10,11 @@ namespace _3dShop.Api.Data.Configurations
         {
             builder.ToTable("payments");
             builder.HasKey(p => p.Id);
+
             builder.HasIndex(p => p.OrderId)
                 .IsUnique();
+            builder.HasIndex(p => p.GatewayPaymentId);
+            builder.HasIndex(p => p.Status);
 
             builder.Property(p => p.Method)
                 .IsRequired()
@@ -54,8 +57,6 @@ namespace _3dShop.Api.Data.Configurations
                 .HasForeignKey<Payment>(p => p.OrderId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Payment_Order_OrderId");
-
-            builder.Navigation(p => p.Order).AutoInclude(false);
         }
     }
 }

@@ -15,6 +15,10 @@ namespace _3dShop.Api.Data.Configurations
             builder.HasIndex(o => o.OrderNumber)
                 .IsUnique();
 
+            builder.HasIndex(o => o.CustomerId);
+            builder.HasIndex(o => o.Status);
+            builder.HasIndex(o => o.CreatedAt);
+
             builder.Property(o => o.OrderNumber)
                 .IsRequired()
                 .HasMaxLength(20)
@@ -104,9 +108,6 @@ namespace _3dShop.Api.Data.Configurations
                 .WithMany(u => u.OrderList)
                 .HasForeignKey(o => o.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Navigation(o => o.Customer)
-                .AutoInclude(false);
         }
     }
 }

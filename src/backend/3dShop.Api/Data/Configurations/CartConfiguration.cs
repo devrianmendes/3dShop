@@ -28,9 +28,6 @@ namespace _3dShop.Api.Data.Configurations
             builder.Property(c => c.UpdatedAt)
                 .IsRequired()
                 .HasColumnType("timestamp");
-
-            builder.Navigation(c => c.Customer).AutoInclude(false);
-            builder.Navigation(c => c.CartItemList).AutoInclude(false);
         }
     }
 }

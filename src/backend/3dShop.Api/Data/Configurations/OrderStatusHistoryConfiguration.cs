@@ -11,6 +11,8 @@ namespace _3dShop.Api.Data.Configurations
             builder.ToTable("order_status_history");
             builder.HasKey(os => os.Id);
 
+            builder.HasIndex(os => os.OrderId);
+
             builder.Property(os => os.FromStatus)
                 .HasMaxLength(30)
                 .HasConversion<string>()
@@ -29,6 +31,10 @@ namespace _3dShop.Api.Data.Configurations
                 .IsRequired()
                 .HasColumnType("timestamp");
 
+            builder.Property(os => os.UpdatedAt)
+                .IsRequired()
+                .HasColumnType("timestamp");
+
             builder.HasOne(os => os.Order)
                 .WithMany(o => o.OrderStatusHistory)
                 .HasForeignKey(os => os.OrderId)
@@ -40,9 +46,6 @@ namespace _3dShop.Api.Data.Configurations
                 .HasForeignKey(os => os.ChangedByUserId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_OrderStatusHistory_User_UserId");
-
-            builder.Navigation(os => os.User).AutoInclude(false);
-            builder.Navigation(os => os.Order).AutoInclude(false);
         }
     }
 }

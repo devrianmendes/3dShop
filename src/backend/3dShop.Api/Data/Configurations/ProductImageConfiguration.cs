@@ -36,9 +36,8 @@ namespace _3dShop.Api.Data.Configurations
             builder.HasOne(pi => pi.Product)
                 .WithMany(p => p.ProductImageList)
                 .HasForeignKey(pi => pi.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Navigation(pi => pi.Product).AutoInclude(false);
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Product_ProductImage_ProductId");
         }
     }
 }

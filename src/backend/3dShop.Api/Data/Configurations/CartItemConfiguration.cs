@@ -47,9 +47,6 @@ namespace _3dShop.Api.Data.Configurations
                 .HasForeignKey(ci => ci.ProductId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_CartItem_Product_ProductId");
-
-            builder.Navigation(ci => ci.Cart).AutoInclude(false);
-            builder.Navigation(ci => ci.Product).AutoInclude(false);
         }
     }
 }

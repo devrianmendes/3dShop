@@ -12,7 +12,8 @@ namespace _3dShop.Api.Data.Configurations
 
             builder.HasKey(p => p.Id);
 
-            builder.HasIndex(p => p.Category);
+            builder.HasIndex(p => p.CategoryId);
+            builder.HasIndex(p => new { p.IsActive, p.IsCustom });
 
             builder.Property(p => p.NamePt)
                 .IsRequired()
@@ -26,12 +27,10 @@ namespace _3dShop.Api.Data.Configurations
 
             builder.Property(p => p.DescriptionPt)
                 .IsRequired()
-                .HasMaxLength(200)
                 .HasColumnType("text");
 
             builder.Property(p => p.DescriptionEn)
                 .IsRequired()
-                .HasMaxLength(200)
                 .HasColumnType("text");
 
             builder.Property(p => p.Price)
@@ -57,19 +56,7 @@ namespace _3dShop.Api.Data.Configurations
                 .WithMany(c => c.ProductList)
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("FK_Products_Categories_CategoryId");
-
-            builder.Navigation(p => p.Category)
-                .AutoInclude(false);
-
-            builder.Navigation(p => p.ProductImageList)
-                .AutoInclude(false);
-
-            builder.Navigation(p => p.OrderItemList)
-                .AutoInclude(false);
-
-            builder.Navigation(p => p.CartItemList)
-                .AutoInclude(false);
+                .HasConstraintName("FK_Product_Category_CategoryId");
         }
     }
 }
