@@ -1,10 +1,7 @@
 <Solution>
   <Folder Name="/src/" />
   <Folder Name="/src/backend/">
+    <Project Path="3dShop.Tests/3dShop.Tests.csproj" Id="8f4c91c4-adcf-4949-9f15-73a3da40356d" />
     <Project Path="src/backend/3dShop.Api/3dShop.Api.csproj" />
-  </Folder>
-  <Folder Name="/src/backend/tests/" />
-  <Folder Name="/src/backend/tests/Integration/">
-    <File Path="CheckDatabaseConnection.cs" />
   </Folder>
 </Solution>

@@ -14,8 +14,8 @@ var conString = builder.Configuration.GetConnectionString("DefaultConnection") ?
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conString));
 
 var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseNpgsql(conString)
-                .Options;
+    .UseNpgsql(conString)
+    .Options;
 
 //using var teste = new AppDbContext(options);
 try
