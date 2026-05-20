@@ -10,7 +10,7 @@ namespace _3dShop.Api.Data
         {
             _context = context;
         }
-        public void Initialize()
+        public async Task<bool> Initialize()
         {
             if (!_context.Categories.Any())
             {
@@ -44,6 +44,9 @@ namespace _3dShop.Api.Data
                     UserRole = UserRole.Admin,
                 });
             }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

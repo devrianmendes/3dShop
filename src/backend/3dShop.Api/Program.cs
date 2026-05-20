@@ -38,7 +38,17 @@ catch (Exception ex)
     Console.WriteLine("Erro ao conectar: " + ex.Message);
 }
 
+builder.Services.AddScoped<SeedData>();
+
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+var seed = new SeedData(context);
+await seed.Initialize();
+
+
 
 
 // Configure the HTTP request pipeline.
