@@ -6,6 +6,7 @@ namespace _3dShop.Api.Data.Configurations
 {
     //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
     //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    //Arquivos de configuração só serão implementados no sistema quando configurado no AppDbContext
     public class CartConfiguration : BaseEntityConfiguration<Cart>
     {
         public override void Configure(EntityTypeBuilder<Cart> builder)
