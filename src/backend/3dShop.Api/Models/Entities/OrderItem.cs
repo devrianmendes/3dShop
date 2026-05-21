@@ -5,7 +5,7 @@
         public required string ProductNameSnapshot { get; set; }
         public required decimal UnitPrice { get; set; }
         public required int Quantity { get; set; }
-        public decimal ItemTotal => this.UnitPrice * this.Quantity;
+        public decimal ItemTotal { get; set; } 
 
         //Relations
         public required Guid OrderId { get; set; } //FK

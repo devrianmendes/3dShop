@@ -34,8 +34,7 @@ namespace _3dShop.Api.Data.Configurations
             builder.Property(oi => oi.ItemTotal)
                 .IsRequired()
                 .HasPrecision(10, 2)
-                .HasColumnType("numeric(10,2)")
-                .HasComputedColumnSql("unit_price * quantity", stored: true);
+                .HasColumnType("numeric(10,2)");
 
             builder.HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItemList)
