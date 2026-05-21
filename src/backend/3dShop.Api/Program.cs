@@ -46,6 +46,8 @@ catch (Exception ex)
     Console.WriteLine("Erro ao conectar: " + ex.Message);
 }
 
+builder.Services.AddScoped<SeedData>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
