@@ -29,13 +29,13 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("Id");
 
@@ -55,7 +55,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
@@ -73,7 +73,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("numeric(10,2)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("Id");
 
@@ -91,7 +91,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("NameEn")
                         .IsRequired()
@@ -104,7 +104,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("VARCHAR(100)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("Id");
 
@@ -118,7 +118,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uuid");
@@ -161,7 +161,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("numeric(10,2)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("Id");
 
@@ -184,7 +184,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<decimal>("ItemTotal")
                         .HasPrecision(10, 2)
@@ -209,7 +209,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("numeric(10,2)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("Id");
 
@@ -230,7 +230,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("FromStatus")
                         .HasMaxLength(30)
@@ -248,7 +248,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("VARCHAR(30)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("Id");
 
@@ -270,7 +270,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("numeric(10,2)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("GatewayPaymentId")
                         .HasMaxLength(100)
@@ -297,7 +297,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("VARCHAR(20)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("Id");
 
@@ -321,7 +321,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("DescriptionEn")
                         .IsRequired()
@@ -352,7 +352,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("numeric(10,2)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.HasKey("Id");
 
@@ -370,7 +370,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
@@ -384,7 +384,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -405,7 +405,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -428,7 +428,7 @@ namespace _3dShop.Api.Migrations
                         .HasColumnType("VARCHAR(255)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestampz");
+                        .HasColumnType("timestamptz");
 
                     b.Property<string>("UserRole")
                         .IsRequired()

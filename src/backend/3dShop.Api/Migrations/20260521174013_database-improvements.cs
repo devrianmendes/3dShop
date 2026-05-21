@@ -240,7 +240,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "users",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -284,7 +284,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "users",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -292,7 +292,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "products",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -328,7 +328,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "products",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -336,7 +336,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "payments",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -391,7 +391,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "payments",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -409,7 +409,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "orders",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -492,7 +492,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "orders",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -564,7 +564,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "categories",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -590,7 +590,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "categories",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -598,7 +598,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "carts",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -606,7 +606,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "carts",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -623,7 +623,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "product_images",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -648,7 +648,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "product_images",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -656,7 +656,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "order_status_history",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -683,7 +683,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "order_status_history",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -691,7 +691,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "order_items",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -736,7 +736,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "order_items",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -744,7 +744,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
                 table: "cart_items",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -779,7 +779,7 @@ namespace _3dShop.Api.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "cart_items",
-                type: "timestampz",
+                type: "timestamptz",
                 nullable: false,
                 oldClrType: typeof(DateTime),
                 oldType: "timestamp with time zone");
@@ -1224,7 +1224,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<string>(
                 name: "PasswordHash",
@@ -1268,7 +1268,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
@@ -1276,7 +1276,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "Price",
@@ -1312,7 +1312,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
@@ -1320,7 +1320,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<int>(
                 name: "Status",
@@ -1375,7 +1375,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "Amount",
@@ -1393,7 +1393,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "Total",
@@ -1476,7 +1476,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<string>(
                 name: "ShippingZipCode",
@@ -1548,7 +1548,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<string>(
                 name: "NamePt",
@@ -1574,7 +1574,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
@@ -1582,7 +1582,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
@@ -1590,7 +1590,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Url",
@@ -1607,7 +1607,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<bool>(
                 name: "IsMain",
@@ -1632,7 +1632,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
@@ -1640,7 +1640,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<int>(
                 name: "ToStatus",
@@ -1667,7 +1667,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AddColumn<Guid>(
                 name: "UserId",
@@ -1682,7 +1682,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "UnitPrice",
@@ -1727,7 +1727,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UpdatedAt",
@@ -1735,7 +1735,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "UnitPrice",
@@ -1770,7 +1770,7 @@ namespace _3dShop.Api.Migrations
                 type: "timestamp with time zone",
                 nullable: false,
                 oldClrType: typeof(DateTime),
-                oldType: "timestampz");
+                oldType: "timestamptz");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Users",

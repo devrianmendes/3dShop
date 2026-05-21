@@ -13,11 +13,11 @@ namespace _3dShop.Api.Data.Configurations
 
             builder.Property(e => e.CreatedAt)
                 .IsRequired()
-                .HasColumnType("timestampz");
+                .HasColumnType("timestamptz");
 
             builder.Property(e => e.UpdatedAt)
                 .IsRequired()
-                .HasColumnType("timestampz");
+                .HasColumnType("timestamptz");
         }
     }
 }
