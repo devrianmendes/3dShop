@@ -4,27 +4,28 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _3dShop.Api.Data.Configurations
 {
-    public class CategoryConfiguration : IEntityTypeConfiguration<Category>
+    //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
+    //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    public class CategoryConfiguration : BaseEntityConfiguration<Category>
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
+        public override void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.ToTable("categories");
 
-            builder.HasKey(c => c.Id);
+            base.Configure(builder); //Chama id, createdAt e updatedAt do baseEntity
 
             builder.Property(c => c.NamePt)
                 .IsRequired()
-                .HasMaxLength(100);
-
+                .HasMaxLength(100)
+                .HasColumnType("VARCHAR(100)");
+            
             builder.Property(c => c.NameEn)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .HasColumnType("VARCHAR(100)");
 
-            builder.Property(u => u.CreatedAt)
-                .IsRequired();
+            //builder.Navigation(c => c.CartItem).AutoInclude(false) foi removido porque, por padrão, o autoinclude já é false;
 
-            builder.Property(u => u.UpdatedAt)
-                .IsRequired();
         }
     }
 }

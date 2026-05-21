@@ -12,7 +12,7 @@ namespace _3dShop.Api.Models.Entities
         public DateTime? PaidAt { get; set; }
 
         //Relations
-        public required Order Order { get; set; }
-        public required Guid OrderId { get; set; }
+        public required Guid OrderId { get; set; }//FK
+        public required Order Order { get; set; }//Navegação - Facilita acesso a entidade relacionada no código
     }
 }

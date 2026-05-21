@@ -4,13 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _3dShop.Api.Data.Configurations
 {
-    public class ProductConfiguration : IEntityTypeConfiguration<Product>
+    //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
+    //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    public class ProductConfiguration : BaseEntityConfiguration<Product>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public override void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.ToTable("products");
 
-            builder.HasKey(p => p.Id);
+            base.Configure(builder); //Chama id, createdAt e updatedAt do baseEntity
 
             builder.HasIndex(p => p.CategoryId);
             builder.HasIndex(p => new { p.IsActive, p.IsCustom });
@@ -44,19 +46,13 @@ namespace _3dShop.Api.Data.Configurations
             builder.Property(p => p.IsActive)
                 .IsRequired();
 
-            builder.Property(p => p.CreatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
-            builder.Property(p => p.UpdatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
             builder.HasOne(p => p.Category)
                 .WithMany(c => c.ProductList)
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Product_Category_CategoryId");
+
+            //builder.Navigation(c => c.CartItem).AutoInclude(false) foi removido porque, por padrão, o autoinclude já é false;
         }
     }
 }

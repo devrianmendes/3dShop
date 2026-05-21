@@ -4,12 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _3dShop.Api.Data.Configurations
 {
-    public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
+    //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
+    //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    public class ProductImageConfiguration : BaseEntityConfiguration<ProductImage>
     {
-        public void Configure(EntityTypeBuilder<ProductImage> builder)
+        public override void Configure(EntityTypeBuilder<ProductImage> builder)
         {
             builder.ToTable("product_images");
-            builder.HasKey(pi => pi.Id);
+
+            base.Configure(builder); //Chama id, createdAt e updatedAt do baseEntity
 
             builder.Property(pi => pi.Url)
                 .IsRequired()
@@ -18,26 +21,20 @@ namespace _3dShop.Api.Data.Configurations
 
             builder.Property(pi => pi.IsMain)
                 .IsRequired()
-                .HasColumnType("bool")
+                .HasColumnType("boolean")
                 .HasDefaultValue(false);
 
             builder.Property(pi => pi.DisplayOrder)
                 .IsRequired()
                 .HasColumnType("int");
 
-            builder.Property(p => p.CreatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
-            builder.Property(p => p.UpdatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
             builder.HasOne(pi => pi.Product)
                 .WithMany(p => p.ProductImageList)
                 .HasForeignKey(pi => pi.ProductId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_Product_ProductImage_ProductId");
+                .HasConstraintName("FK_ProductImage_Product_ProductId");
+
+            //builder.Navigation(c => c.CartItem).AutoInclude(false) foi removido porque, por padrão, o autoinclude já é false;
         }
     }
 }

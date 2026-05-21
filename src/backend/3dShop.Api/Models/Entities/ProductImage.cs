@@ -7,7 +7,7 @@
         public required int DisplayOrder { get; set; }
 
         //Relations
-        public required Guid ProductId { get; set; }
-        public required Product Product { get; set; }
+        public required Guid ProductId { get; set; } //FK
+        public required Product Product { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
     }
 }

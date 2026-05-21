@@ -4,8 +4,8 @@
     //Required é utilizado somente quando O USUÁRIO precisa fornecer o dado.
     public class BaseEntity
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public Guid Id { get; set; } = Guid.NewGuid(); //Não precisa de required pois gera um valor ao instanciar
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; //Não precisa de required pois gera um valor ao instanciar
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow; //Não precisa de required pois gera um valor ao instanciar
     }
 }

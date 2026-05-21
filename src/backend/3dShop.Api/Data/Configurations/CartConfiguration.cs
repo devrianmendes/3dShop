@@ -4,30 +4,26 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _3dShop.Api.Data.Configurations
 {
-    public class CartConfiguration : IEntityTypeConfiguration<Cart>
+    //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
+    //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    public class CartConfiguration : BaseEntityConfiguration<Cart>
     {
-        public void Configure(EntityTypeBuilder<Cart> builder)
+        public override void Configure(EntityTypeBuilder<Cart> builder)
         {
-            builder.ToTable("carts");
+            builder.ToTable("carts"); 
 
-            builder.HasKey(c => c.Id);
+            base.Configure(builder); //Chama id, createdAt e updatedAt do baseEntity
 
             builder.HasIndex(c => c.CustomerId)
-                .IsUnique();                
+                .IsUnique();
 
             builder.HasOne(c => c.Customer)
                 .WithOne(u => u.Cart)
-                .HasForeignKey<Cart>(c => c.CustomerId)
+                .HasForeignKey<Cart>(c => c.CustomerId) //Em relações 1:1, é necessário que informe via angle brackets de qual entity vem a FK 
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Cart_User_UserId");
 
-            builder.Property(c => c.CreatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
-            builder.Property(c => c.UpdatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
+            //builder.Navigation(c => c.CartItem).AutoInclude(false) foi removido porque, por padrão, o autoinclude já é false;
         }
     }
 }

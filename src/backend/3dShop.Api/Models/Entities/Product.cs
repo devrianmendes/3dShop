@@ -11,11 +11,11 @@
         public required bool IsActive { get; set; }
         
         //Relations
-        public required Guid CategoryId { get; set; }
-        public required Category Category { get; set; }
+        public required Guid CategoryId { get; set; } //FK
+        public required Category Category { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
 
-        public ICollection<ProductImage>? ProductImageList { get; set; }
-        public ICollection<OrderItem>? OrderItemList { get; set; }
-        public ICollection<CartItem>? CartItemList { get; set; }
+        public ICollection<ProductImage>? ProductImageList { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
+        public ICollection<OrderItem>? OrderItemList { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
+        public ICollection<CartItem>? CartItemList { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
     }
 }

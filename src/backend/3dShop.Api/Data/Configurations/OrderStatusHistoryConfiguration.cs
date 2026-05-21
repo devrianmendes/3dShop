@@ -4,36 +4,31 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _3dShop.Api.Data.Configurations
 {
-    public class OrderStatusHistoryConfiguration : IEntityTypeConfiguration<OrderStatusHistory>
+    //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
+    //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    public class OrderStatusHistoryConfiguration : BaseEntityConfiguration<OrderStatusHistory>
     {
-        public void Configure(EntityTypeBuilder<OrderStatusHistory> builder)
+        public override void Configure(EntityTypeBuilder<OrderStatusHistory> builder)
         {
             builder.ToTable("order_status_history");
-            builder.HasKey(os => os.Id);
+
+            base.Configure(builder); //Chama id, createdAt e updatedAt do baseEntity
 
             builder.HasIndex(os => os.OrderId);
 
             builder.Property(os => os.FromStatus)
                 .HasMaxLength(30)
-                .HasConversion<string>()
+                .HasConversion<string>() //Este campo é um enum, é necessário informar qual o tipo de dado contido no enum;
                 .HasColumnType("VARCHAR(30)");
 
             builder.Property(os => os.ToStatus)
                 .IsRequired()
                 .HasMaxLength(30)
-                .HasConversion<string>()
+                .HasConversion<string>() //Este campo é um enum, é necessário informar qual o tipo de dado contido no enum;
                 .HasColumnType("VARCHAR(30)");
 
             builder.Property(os => os.Notes)
                 .HasColumnType("text");
-
-            builder.Property(os => os.CreatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
-            builder.Property(os => os.UpdatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
 
             builder.HasOne(os => os.Order)
                 .WithMany(o => o.OrderStatusHistory)
@@ -46,6 +41,9 @@ namespace _3dShop.Api.Data.Configurations
                 .HasForeignKey(os => os.ChangedByUserId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_OrderStatusHistory_User_UserId");
+
+            //builder.Navigation(c => c.CartItem).AutoInclude(false) foi removido porque, por padrão, o autoinclude já é false;
+
         }
     }
 }

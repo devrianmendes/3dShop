@@ -1,23 +1,31 @@
 using _3dShop.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// String de conexão com o banco de dados
+var conString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("DefaultConnection string not found.");
+
+// Substitui o logger padrão pelo Serilog
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console());
+
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer(); //Swagger
+builder.Services.AddSwaggerGen(); //Swagger
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conString)); //Context
 
-var conString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("DefaultConnection string not found.");
-
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conString));
-
+//Teste de conexão com o banco de dados
 var options = new DbContextOptionsBuilder<AppDbContext>()
     .UseNpgsql(conString)
     .Options;
-
-//using var teste = new AppDbContext(options);
 try
 {
     using var dbInstance = new AppDbContext(options);
@@ -40,11 +48,12 @@ catch (Exception ex)
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger(); //Swagger
+    app.UseSwaggerUI(); //Swagger
 }
 
 app.UseHttpsRedirection();

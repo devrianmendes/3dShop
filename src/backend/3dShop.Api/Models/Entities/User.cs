@@ -10,9 +10,9 @@ namespace _3dShop.Api.Models.Entities
         public required UserRole UserRole { get; set; }
         public required bool IsActive { get; set; } 
 
-        //Releations
-        public ICollection<Order>? OrderList { get; set; }
-        public ICollection<OrderStatusHistory>? OrderStatusHistory { get; set; }
-        public Cart? Cart { get; set; }
+        //Relations
+        public ICollection<Order>? OrderList { get; set; }  //Navegação - Facilita acesso a entidade relacionada no código
+        public ICollection<OrderStatusHistory>? OrderStatusHistory { get; set; }  //Navegação - Facilita acesso a entidade relacionada no código
+        public Cart? Cart { get; set; }  //Navegação - Facilita acesso a entidade relacionada no código
     }
 }

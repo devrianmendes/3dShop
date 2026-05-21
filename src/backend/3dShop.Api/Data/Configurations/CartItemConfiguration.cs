@@ -4,12 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _3dShop.Api.Data.Configurations
 {
-    public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
+    //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
+    //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    public class CartItemConfiguration : BaseEntityConfiguration<CartItem>
     {
-        public void Configure(EntityTypeBuilder<CartItem> builder)
+        public override void Configure(EntityTypeBuilder<CartItem> builder)
         {
             builder.ToTable("cart_items");
-            builder.HasKey(ci => ci.Id);
+
+            base.Configure(builder);//Chama id, createdAt e updatedAt
 
             builder.HasIndex(ci => ci.CartId);
             builder.HasIndex(ci => ci.ProductId);
@@ -28,14 +31,6 @@ namespace _3dShop.Api.Data.Configurations
                 .IsRequired()
                 .HasColumnType("int");
 
-            builder.Property(ci => ci.CreatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
-            builder.Property(ci => ci.UpdatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
             builder.HasOne(ci => ci.Cart)
                 .WithMany(c => c.CartItemList)
                 .HasForeignKey(ci => ci.CartId)
@@ -47,6 +42,9 @@ namespace _3dShop.Api.Data.Configurations
                 .HasForeignKey(ci => ci.ProductId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_CartItem_Product_ProductId");
+
+            //builder.Navigation(c => c.CartItem).AutoInclude(false) foi removido porque, por padrão, o autoinclude já é false;
+
         }
     }
 }

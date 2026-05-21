@@ -2,10 +2,9 @@
 {
     public class Cart : BaseEntity
     {
-        public ICollection<CartItem>? CartItemList { get; set; }
-
-        //References
-        public required User Customer { get; set; }
-        public required Guid CustomerId { get; set; }
+        //Relations
+        public ICollection<CartItem>? CartItemList { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
+        public required User Customer { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
+        public required Guid CustomerId { get; set; } //FK
     }
 }

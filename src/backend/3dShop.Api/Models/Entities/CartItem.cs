@@ -7,9 +7,9 @@
         public required int Quantity { get; set; }
 
         //Relations
-        public required Cart Cart { get; set; }
-        public required Guid CartId { get; set; }
-        public required Product Product { get; set; }
-        public required Guid ProductId { get; set; }
+        public required Cart Cart { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
+        public required Product Product { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
+        public required Guid CartId { get; set; } //FK
+        public required Guid ProductId { get; set; } //FK
     }
 }

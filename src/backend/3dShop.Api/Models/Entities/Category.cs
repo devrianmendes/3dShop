@@ -6,6 +6,6 @@
         public required string NameEn { get; set; }
 
         //Relations
-        public ICollection<Product>? ProductList { get; set; }
+        public ICollection<Product>? ProductList { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
     }
 }

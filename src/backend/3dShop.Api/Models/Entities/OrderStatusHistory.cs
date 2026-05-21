@@ -10,9 +10,9 @@ namespace _3dShop.Api.Models.Entities
         public string? Notes { get; set; }
 
         //Relations
-        public required User User { get; set; }
-        public required Guid ChangedByUserId { get; set; }
-        public required Order Order { get; set; }
-        public required Guid OrderId { get; set; }
+        public required Guid ChangedByUserId { get; set; } //FK
+        public required Guid OrderId { get; set; } //FK
+        public required User User { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
+        public required Order Order { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
     }
 }

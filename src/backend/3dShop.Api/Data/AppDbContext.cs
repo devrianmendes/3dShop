@@ -1,6 +1,5 @@
 ﻿using _3dShop.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
 
 namespace _3dShop.Api.Data
 {
@@ -21,5 +20,19 @@ namespace _3dShop.Api.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+
+        //Sobreescreve o savechangesasync para sempre atualizar o updatedAt
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Modified)
+                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
     }
 }

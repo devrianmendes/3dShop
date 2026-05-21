@@ -4,16 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _3dShop.Api.Data.Configurations
 {
-    /// <summary>
-    /// Configuração de mapeamento da entidade User para o banco de dados.
-    /// Define relacionamentos com Orders, OrderStatusHistory e Cart.
-    /// </summary>
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
+    //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    public class UserConfiguration : BaseEntityConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public override void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("users");
-            builder.HasKey(u => u.Id);
+
+            base.Configure(builder); //Chama id, createdAt e updatedAt do baseEntity
 
             builder.HasIndex(u => u.Email)
                 .IsUnique();
@@ -32,21 +31,19 @@ namespace _3dShop.Api.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(255)
                 .HasColumnType("VARCHAR(255)");
-            ;
+
+            builder.Property(u => u.IsActive)
+                .IsRequired()
+                .HasColumnType("boolean")
+                .HasDefaultValue(true);
 
             builder.Property(u => u.UserRole)
                 .IsRequired()
-                .HasConversion<string>()
+                .HasConversion<string>() //Este campo é um enum, é necessário informar qual o tipo de dado contido no enum;
                 .HasColumnType("VARCHAR(20)")
                 .HasMaxLength(20);
 
-            builder.Property(u => u.CreatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-           
-            builder.Property(u => u.UpdatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
+            //builder.Navigation(c => c.CartItem).AutoInclude(false) foi removido porque, por padrão, o autoinclude já é false;
         }
     }
 }

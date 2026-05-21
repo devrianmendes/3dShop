@@ -4,12 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _3dShop.Api.Data.Configurations
 {
-    public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
+    //Herda BaseEntityConfiguration para herdar id, createdAt e updatedAt.
+    //Lá, foi configurada a herança de IEntityTypeConfiguration<T>
+    public class OrderItemConfiguration : BaseEntityConfiguration<OrderItem>
     {
-        public void Configure(EntityTypeBuilder<OrderItem> builder)
+        public override void Configure(EntityTypeBuilder<OrderItem> builder)
         {
             builder.ToTable("order_items");
-            builder.HasKey(oi => oi.Id);
+
+            base.Configure(builder); //Chama id, createdAt e updatedAt do baseEntity
 
             builder.HasIndex(oi => oi.OrderId);
             builder.HasIndex(oi => oi.ProductId);
@@ -31,15 +34,8 @@ namespace _3dShop.Api.Data.Configurations
             builder.Property(oi => oi.ItemTotal)
                 .IsRequired()
                 .HasPrecision(10, 2)
-                .HasColumnType("numeric(10,2)");
-
-            builder.Property(p => p.CreatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
-
-            builder.Property(p => p.UpdatedAt)
-                .IsRequired()
-                .HasColumnType("timestamp");
+                .HasColumnType("numeric(10,2)")
+                .HasComputedColumnSql("unit_price * quantity", stored: true);
 
             builder.HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItemList)
@@ -51,7 +47,10 @@ namespace _3dShop.Api.Data.Configurations
                 .WithMany(p => p.OrderItemList)
                 .HasForeignKey(oi => oi.ProductId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("FK_OrderItem_Product_ProductItem");
+                .HasConstraintName("FK_OrderItem_Product_ProductId");
+
+            //builder.Navigation(c => c.CartItem).AutoInclude(false) foi removido porque, por padrão, o autoinclude já é false;
+
         }
     }
 }
