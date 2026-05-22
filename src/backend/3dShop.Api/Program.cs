@@ -1,4 +1,5 @@
 using _3dShop.Api.Data;
+using _3dShop.Api.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Serilog;
@@ -36,29 +37,31 @@ builder.Services.AddSwaggerGen(options =>  //Configuração do swagger para roda
 });
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conString)); //Context
 
+var configuration = builder.Configuration;
+Console.WriteLine(configuration);
 //Teste de conexão com o banco de dados
-var options = new DbContextOptionsBuilder<AppDbContext>()
-    .UseNpgsql(conString)
-    .Options;
-try
-{
-    using var dbInstance = new AppDbContext(options);
-    bool conTest = dbInstance.Database.CanConnect();
+//var options = new DbContextOptionsBuilder<AppDbContext>()
+//    .UseNpgsql(conString)
+//    .Options;
+//try
+//{
+//    using var dbInstance = new AppDbContext(options);
+//    bool conTest = dbInstance.Database.CanConnect();
 
-    if (conTest)
-    {
-        Console.WriteLine("Connection success.");
+//    if (conTest)
+//    {
+//        Console.WriteLine("Connection success.");
 
-    }
-    else
-    {
-        Console.WriteLine("Connection failure.");
-    }
-}
-catch (Exception ex)
-{
-    Console.WriteLine("Erro ao conectar: " + ex.Message);
-}
+//    }
+//    else
+//    {
+//        Console.WriteLine("Connection failure.");
+//    }
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine("Erro ao conectar: " + ex.Message);
+//}
 
 builder.Services.AddScoped<SeedData>();
 
