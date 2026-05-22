@@ -18,6 +18,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .WriteTo.Console());
 
 // Add services to the container.
+builder.Services.AddSingleton<JwtHelper>(); //Registra o jwthelper no DI. Os secrets recebidos e usados no jwthelper são automaticamente recuperados ao criar o builder em builder.Configuration
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); //Swagger
@@ -37,8 +38,6 @@ builder.Services.AddSwaggerGen(options =>  //Configuração do swagger para roda
 });
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conString)); //Context
 
-var configuration = builder.Configuration;
-Console.WriteLine(configuration);
 //Teste de conexão com o banco de dados
 //var options = new DbContextOptionsBuilder<AppDbContext>()
 //    .UseNpgsql(conString)
