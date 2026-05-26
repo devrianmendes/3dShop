@@ -1,5 +1,10 @@
 using _3dShop.Api.Data;
 using _3dShop.Api.Helpers;
+using _3dShop.Api.Middlewares;
+using _3dShop.Api.Models.DTOs;
+using _3dShop.Api.Services;
+using _3dShop.Api.Validators;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Serilog;
@@ -22,6 +27,12 @@ builder.Services.AddSingleton<JwtHelper>(); //Registra o jwthelper no DI. Os sec
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); //Swagger
+
+//Validators
+builder.Services.AddScoped<IValidator<AuthUserRequest>, UserValidator>();
+
+//Services
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddSwaggerGen(options =>  //Configuração do swagger para rodar com JWT
 {
     options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
@@ -36,6 +47,8 @@ builder.Services.AddSwaggerGen(options =>  //Configuração do swagger para roda
         [new OpenApiSecuritySchemeReference("bearer", document)] = []
     });
 });
+
+//Context
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conString)); //Context
 
 //Teste de conexão com o banco de dados
@@ -65,6 +78,8 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conString)); //
 builder.Services.AddScoped<SeedData>();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
