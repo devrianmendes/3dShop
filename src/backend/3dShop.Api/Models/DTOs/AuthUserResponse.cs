@@ -2,6 +2,9 @@
 {
     public class AuthUserResponse
     {
-        public string Result { get; set; }
+        public Guid Id { get; set; }
+        public required string Name { get; set; }
+        public required string Email { get; set; }
+        public required string Token { get; set; }
     }
 }

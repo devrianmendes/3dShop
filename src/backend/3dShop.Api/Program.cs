@@ -12,7 +12,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // String de conexão com o banco de dados
-var conString = builder.Configuration.GetConnectionString("DefaultConnection")
+var conString = builder.Configuration.GetConnectionString("LocalConnection")
     ?? throw new InvalidOperationException("DefaultConnection string not found.");
 
 // Substitui o logger padrão pelo Serilog
@@ -91,7 +91,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseAuthorization(); //Verifica permissões (roles)
+
+app.UseAuthentication();
 
 app.MapControllers();
 

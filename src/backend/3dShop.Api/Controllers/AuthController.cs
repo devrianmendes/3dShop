@@ -23,21 +23,20 @@ namespace _3dShop.Api.Controllers
             _logger = logger;
             _jwtHelper = jwtHelper;
             _validator = validator;
-            _authService = authService;
+            _authService = authService; 
         }
 
         [HttpPost]
-        public async Task<ActionResult<AuthUserResponse>> Post(AuthUserRequest user)
+        [ProducesResponseType<AuthUserResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<AuthUserResponse>> SignInAsync(AuthUserRequest user, CancellationToken cancellationToken)
         {
             _validator.ValidateAndThrow(user);
 
-            await _authService.Execute(user);
+            AuthUserResponse token = await _authService.SignInAsync(user, cancellationToken);
 
-
-            return Ok();
-
-            //_jwtHelper.GenerateToken("id", "email", "nome", "admin");
-            //return Ok("OK");
+            return Ok(token);
         }
     }
 }
