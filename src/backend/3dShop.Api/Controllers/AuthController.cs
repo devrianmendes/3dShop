@@ -4,6 +4,8 @@ using _3dShop.Api.Services;
 using _3dShop.Api.Validators;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +39,25 @@ namespace _3dShop.Api.Controllers
             AuthUserResponse token = await _authService.SignInAsync(user, cancellationToken);
 
             return Ok(token);
+        }
+
+        //[HttpGet("test")]
+        //public async Task<IActionResult> Test()
+        //{
+
+
+        //    var token = Request.Headers["Authorization"];
+
+        //    Console.WriteLine(token);
+
+        //    return Ok(User.Identity.IsAuthenticated);
+        //}
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult Test()
+        {
+            return Ok(User.Identity.IsAuthenticated);
         }
     }
 }

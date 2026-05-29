@@ -32,7 +32,7 @@ namespace _3dShop.Api.Services
                 throw new BadRequestException("Usuário ou senha inválidos.");
             }
 
-            var token = _jwthelper.GenerateToken(userExist.Id.ToString(), userExist.Email, userExist.Name);
+            var token = _jwthelper.GenerateToken(userExist.Id.ToString(), userExist.Email, userExist.Name, userExist.UserRole.ToString());
 
             return new AuthUserResponse()
             {

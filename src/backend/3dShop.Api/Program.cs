@@ -5,9 +5,12 @@ using _3dShop.Api.Models.DTOs;
 using _3dShop.Api.Services;
 using _3dShop.Api.Validators;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +25,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .Enrich.FromLogContext()
     .WriteTo.Console());
 
-// Add services to the container.
+// Configuranso services no container
 builder.Services.AddSingleton<JwtHelper>(); //Registra o jwthelper no DI. Os secrets recebidos e usados no jwthelper são automaticamente recuperados ao criar o builder em builder.Configuration
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -33,12 +36,14 @@ builder.Services.AddScoped<IValidator<AuthUserRequest>, UserValidator>();
 
 //Services
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddSwaggerGen(options =>  //Configuração do swagger para rodar com JWT
+
+//Configuração do swagger para rodar com JWT
+builder.Services.AddSwaggerGen(options =>  
 {
     options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
+        Scheme = "Bearer",
         BearerFormat = "JWT",
         Description = "JWT Authorization header using the Bearer scheme."
     });
@@ -46,6 +51,27 @@ builder.Services.AddSwaggerGen(options =>  //Configuração do swagger para roda
     {
         [new OpenApiSecuritySchemeReference("bearer", document)] = []
     });
+});
+
+// Configurando o UseAuthentication para usar o JwtBearer na validação e autenticação do token enviado na requisição
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+    var jwt = builder.Configuration.GetSection("JwtSettings");
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = jwt["Issuer"],
+        ValidAudience = jwt["Audience"],
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwt["Secret"]))
+    };
 });
 
 //Context
@@ -79,8 +105,6 @@ builder.Services.AddScoped<SeedData>();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -89,12 +113,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(); //Swagger
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
-
-app.UseAuthorization(); //Verifica permissões (roles)
-
-app.UseAuthentication();
-
+app.UseAuthentication(); //Middleware que verifica autenticidade do JWT
+app.UseAuthorization(); //Aplica regras do Data Annotation [Authorize]
 app.MapControllers();
-
 app.Run();

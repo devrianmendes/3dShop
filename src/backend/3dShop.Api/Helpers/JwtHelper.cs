@@ -22,7 +22,7 @@ namespace _3dShop.Api.Helpers
         }
 
         // Gera token JWT
-        public string GenerateToken(string userId, string email, string name, string role = null)
+        public string GenerateToken(string userId, string email, string name, string role)
         {
             var claims = new[]
             {
@@ -31,6 +31,7 @@ namespace _3dShop.Api.Helpers
                 new Claim(JwtRegisteredClaimNames.Sub, userId), 
                 new Claim(JwtRegisteredClaimNames.Email, email), 
                 new Claim(JwtRegisteredClaimNames.Name, name), 
+                new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) //Um novo id que ajuda a instanciar um token. Se um usuário logasse em dispositivos diferentes sem esse dado extra, seus tokens seriam exatamente iguais.
             }; //Formato final: [{sub: userId}, {Email: email}, {Name: name}, {Jti: new Guid}]
 
@@ -49,31 +50,31 @@ namespace _3dShop.Api.Helpers
         }
 
         // Valida token e retorna ClaimsPrincipal
-        public ClaimsPrincipal? ValidateToken(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler(); //Validador do JWT
-            var key = Encoding.UTF8.GetBytes(_secret); //Novamente converte o secret em byte
+        //public ClaimsPrincipal? ValidateToken(string token)
+        //{
+        //    var tokenHandler = new JwtSecurityTokenHandler(); //Validador do JWT
+        //    var key = Encoding.UTF8.GetBytes(_secret); //Novamente converte o secret em byte
 
-            try
-            {
-                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = _issuer,
-                    ValidAudience = _audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ClockSkew = TimeSpan.Zero // evita tolerância de alguns minutos
-                }, out SecurityToken validatedToken);
+        //    try
+        //    {
+        //        var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+        //        {
+        //            ValidateIssuer = true,
+        //            ValidateAudience = true,
+        //            ValidateLifetime = true,
+        //            ValidateIssuerSigningKey = true,
+        //            ValidIssuer = _issuer,
+        //            ValidAudience = _audience,
+        //            IssuerSigningKey = new SymmetricSecurityKey(key),
+        //            ClockSkew = TimeSpan.Zero // evita tolerância de alguns minutos
+        //        }, out SecurityToken validatedToken);
 
-                return principal;
-            }
-            catch
-            {
-                return null; // token inválido ou expirado
-            }
-        }
+        //        return principal;
+        //    }
+        //    catch
+        //    {
+        //        return null; // token inválido ou expirado
+        //    }
+        //}
     }
 }
