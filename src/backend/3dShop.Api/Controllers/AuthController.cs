@@ -1,5 +1,6 @@
 ﻿using _3dShop.Api.Helpers;
-using _3dShop.Api.Models.DTOs;
+using _3dShop.Api.Models.DTOs.Users;
+using _3dShop.Api.Models.Entities;
 using _3dShop.Api.Services;
 using _3dShop.Api.Validators;
 using FluentValidation;
@@ -18,9 +19,9 @@ namespace _3dShop.Api.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly JwtHelper _jwtHelper;
         private readonly AuthService _authService;
-        private readonly IValidator<AuthUserRequest> _validator; //Interface fornecida pelo fluent validation
+        private readonly IValidator<AuthUserInterface> _validator; //Interface fornecida pelo fluent validation
 
-        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<AuthUserRequest> validator, AuthService authService)
+        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<AuthUserInterface> validator, AuthService authService)
         {
             _logger = logger;
             _jwtHelper = jwtHelper;
@@ -31,7 +32,6 @@ namespace _3dShop.Api.Controllers
         [HttpPost]
         [ProducesResponseType<AuthUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AuthUserResponse>> SignInAsync(AuthUserRequest user, CancellationToken cancellationToken)
         {
             _validator.ValidateAndThrow(user);
@@ -41,23 +41,16 @@ namespace _3dShop.Api.Controllers
             return Ok(token);
         }
 
-        //[HttpGet("test")]
-        //public async Task<IActionResult> Test()
-        //{
-
-
-        //    var token = Request.Headers["Authorization"];
-
-        //    Console.WriteLine(token);
-
-        //    return Ok(User.Identity.IsAuthenticated);
-        //}
-
-        [Authorize]
-        [HttpGet]
-        public ActionResult Test()
+        [HttpPost("/register")]
+        [ProducesResponseType<NewUserResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> SignUpAsync(NewUserRequest newUserRequest, CancellationToken cancellationToken)
         {
-            return Ok(User.Identity.IsAuthenticated);
+            _validator.ValidateAndThrow(newUserRequest);
+
+            NewUserResponse createdUser = await _authService.SignUpAsync(newUserRequest, cancellationToken);
+
+            return Ok();
         }
     }
 }

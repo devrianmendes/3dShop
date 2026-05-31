@@ -1,7 +1,7 @@
 using _3dShop.Api.Data;
 using _3dShop.Api.Helpers;
 using _3dShop.Api.Middlewares;
-using _3dShop.Api.Models.DTOs;
+using _3dShop.Api.Models.DTOs.Users;
 using _3dShop.Api.Services;
 using _3dShop.Api.Validators;
 using FluentValidation;
@@ -32,7 +32,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); //Swagger
 
 //Validators
-builder.Services.AddScoped<IValidator<AuthUserRequest>, UserValidator>();
+builder.Services.AddScoped<IValidator<AuthUserInterface>, UserValidator>();
 
 //Services
 builder.Services.AddScoped<AuthService>();

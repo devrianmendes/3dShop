@@ -1,8 +1,9 @@
-﻿namespace _3dShop.Api.Models.DTOs
+﻿namespace _3dShop.Api.Models.DTOs.Users
 {
-    public class AuthUserRequest
+    public interface AuthUserInterface
     {
         public string Email { get; set; }
         public string Password { get; set; }
+
     }
 }
