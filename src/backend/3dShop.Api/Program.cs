@@ -37,9 +37,10 @@ builder.Services.AddScoped<IValidator<ValidateUserInterface>, UserValidator>();
 
 //Services
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<CreateUserService>();
 
 //Configuração do swagger para rodar com JWT
-builder.Services.AddSwaggerGen(options =>  
+builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
     {

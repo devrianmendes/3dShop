@@ -27,10 +27,10 @@ namespace _3dShop.Api.Controllers
             _logger = logger;
             _jwtHelper = jwtHelper;
             _validator = validator;
-            _authService = authService; 
+            _authService = authService;
         }
 
-        [HttpPost]
+        [HttpPost("signin")]
         [ProducesResponseType<AuthUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AuthUserResponse>> SignInAsync(AuthUserRequest user, CancellationToken cancellationToken)
@@ -42,10 +42,22 @@ namespace _3dShop.Api.Controllers
             return Ok(token);
         }
 
-        [HttpPost("/register")]
+        [HttpPost("register")]
         [ProducesResponseType<NewUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> SignUpAsync(NewUserRequest newUserRequest, CancellationToken cancellationToken)
+        {
+            _validator.ValidateAndThrow(newUserRequest);
+
+            NewUserResponse createdUser = await _authService.SignUpAsync(newUserRequest, cancellationToken);
+
+            return Ok(createdUser);
+        }
+
+        [HttpPost("refresh")]
+        [ProducesResponseType<NewUserResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> RefreshTokenAsync(NewUserRequest newUserRequest, CancellationToken cancellationToken)
         {
             _validator.ValidateAndThrow(newUserRequest);
 
