@@ -4,6 +4,7 @@ using _3dShop.Api.Middlewares;
 using _3dShop.Api.Models.DTOs.Users;
 using _3dShop.Api.Services;
 using _3dShop.Api.Validators;
+using _3dShop.Api.Models.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); //Swagger
 
 //Validators
-builder.Services.AddScoped<IValidator<AuthUserInterface>, UserValidator>();
+builder.Services.AddScoped<IValidator<ValidateUserInterface>, UserValidator>();
 
 //Services
 builder.Services.AddScoped<AuthService>();

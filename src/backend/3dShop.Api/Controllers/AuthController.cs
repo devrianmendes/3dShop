@@ -1,6 +1,7 @@
 ﻿using _3dShop.Api.Helpers;
 using _3dShop.Api.Models.DTOs.Users;
 using _3dShop.Api.Models.Entities;
+using _3dShop.Api.Models.Interfaces;
 using _3dShop.Api.Services;
 using _3dShop.Api.Validators;
 using FluentValidation;
@@ -19,9 +20,9 @@ namespace _3dShop.Api.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly JwtHelper _jwtHelper;
         private readonly AuthService _authService;
-        private readonly IValidator<AuthUserInterface> _validator; //Interface fornecida pelo fluent validation
+        private readonly IValidator<ValidateUserInterface> _validator; //Interface fornecida pelo fluent validation
 
-        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<AuthUserInterface> validator, AuthService authService)
+        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<ValidateUserInterface> validator, AuthService authService)
         {
             _logger = logger;
             _jwtHelper = jwtHelper;
@@ -50,7 +51,7 @@ namespace _3dShop.Api.Controllers
 
             NewUserResponse createdUser = await _authService.SignUpAsync(newUserRequest, cancellationToken);
 
-            return Ok();
+            return Ok(createdUser);
         }
     }
 }
