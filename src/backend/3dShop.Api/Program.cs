@@ -1,7 +1,6 @@
 using _3dShop.Api.Data;
 using _3dShop.Api.Helpers;
 using _3dShop.Api.Middlewares;
-using _3dShop.Api.Models.DTOs.Users;
 using _3dShop.Api.Services;
 using _3dShop.Api.Validators;
 using _3dShop.Api.Models.Interfaces;
@@ -12,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Serilog;
 using System.Text;
+using _3dShop.Api.Models.DTOs.Category;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,10 +34,12 @@ builder.Services.AddEndpointsApiExplorer(); //Swagger
 
 //Validators
 builder.Services.AddScoped<IValidator<ValidateUserInterface>, UserValidator>();
+builder.Services.AddScoped<IValidator<NewCategoryRequest>, CategoryValidator>();
 
 //Services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CreateUserService>();
+builder.Services.AddScoped<CategoryService>();
 
 //Configuração do swagger para rodar com JWT
 builder.Services.AddSwaggerGen(options =>

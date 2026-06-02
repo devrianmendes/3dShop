@@ -43,7 +43,7 @@ namespace _3dShop.Api.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType<NewUserResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<NewUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> SignUpAsync(NewUserRequest newUserRequest, CancellationToken cancellationToken)
         {

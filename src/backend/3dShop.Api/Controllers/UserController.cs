@@ -22,7 +22,9 @@ namespace _3dShop.Api.Controllers
         }
 
         [Authorize(Roles = "Admin")] //Permite que apenas admin criem conta para outros admin/sellers
-        [HttpPost]
+        [HttpPost("register")]
+        [ProducesResponseType<NewUserResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<NewUserResponse>> CreateEmployeeAsync(NewUserRequest newUserRequest, CancellationToken cancellationToken)
         {
             _validate.ValidateAndThrow(newUserRequest);
