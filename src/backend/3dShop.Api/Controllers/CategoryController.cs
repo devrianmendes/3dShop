@@ -1,6 +1,6 @@
+using _3dShop.Api.Exceptions;
 using _3dShop.Api.Models.DTOs.Category;
 using _3dShop.Api.Services;
-using _3dShop.Api.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,32 +11,55 @@ namespace _3dShop.Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly IValidator<NewCategoryRequest> _validate;
-        private readonly CategoryService _createCategoryService;
-        public CategoryController(IValidator<NewCategoryRequest> validate, CategoryService createCategoryService)
+        private readonly CategoryService _categoryService;
+        public CategoryController(IValidator<NewCategoryRequest> validate, CategoryService categoryService)
         {
             _validate = validate;
-            _createCategoryService = createCategoryService;
+            _categoryService = categoryService;
         }
 
-        [HttpGet("{CategoryId}", Name = "GetByIdAsync")]
-        public IActionResult GetByIdAsync(Guid CategoryId)
+        //[Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
+        [ProducesResponseType<SingleCategoryResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet]
+        public async Task<ActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            return Ok();
+            IEnumerable<SingleCategoryResponse> categories = await _categoryService.GetAllAsync(cancellationToken);
+
+            return Ok(categories);
         }
 
-        // [Authorize(Roles = "Admin, Seller")]
+        [Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
+        [ProducesResponseType<SingleCategoryResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("{CategoryId}", Name = "GetByIdAsync")]
+        public async Task<ActionResult> GetByIdAsync(Guid categoryId, CancellationToken cancellationToken)
+        {
+            if (categoryId == Guid.Empty)
+            {
+                throw new BadRequestException("Id inválido");
+            }
+
+            SingleCategoryResponse category = await _categoryService.GetCategoryByIdAsync(categoryId, cancellationToken);
+
+            return Ok(category);
+        }
+
+        [Authorize(Roles = "Admin, Seller")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
         [HttpPost]
         [ProducesResponseType<NewCategoryResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<NewCategoryResponse>> CreateCategory(NewCategoryRequest newCategoryRequest, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult<NewCategoryResponse>> CreateCategoryAsync(NewCategoryRequest newCategoryRequest, CancellationToken cancellationToken)
         {
             _validate.ValidateAndThrow(newCategoryRequest);
 
-            NewCategoryResponse newCategoryResponse = await _createCategoryService.CreateCategory(newCategoryRequest, cancellationToken);
+            NewCategoryResponse newCategoryResponse = await _categoryService.CreateCategoryAsync(newCategoryRequest, cancellationToken);
 
-            return CreatedAtAction(
+            return CreatedAtRoute( //Por algum motivo, createdAtAction não funcionou de jeito nenhum
                 nameof(GetByIdAsync),
-                new { CategoryId = newCategoryResponse.Id }, // Substitua 'Id' pelo nome da propriedade do ID no seu response
+                new { CategoryId = newCategoryResponse.Id }, 
                 newCategoryResponse
             );
         }

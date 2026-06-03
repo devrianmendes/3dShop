@@ -1,4 +1,5 @@
 using _3dShop.Api.Models.DTOs.Users;
+using _3dShop.Api.Services.Internals;
 
 namespace _3dShop.Api.Services
 {

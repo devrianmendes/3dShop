@@ -5,7 +5,7 @@ using _3dShop.Api.Models.Entities;
 using _3dShop.Api.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace _3dShop.Api.Services
+namespace _3dShop.Api.Services.Internals
 {
     public class CreateUserService
     {
@@ -17,7 +17,9 @@ namespace _3dShop.Api.Services
 
         public async Task<NewUserResponse> CreateUserAsync(NewUserRequest newUserRequest, UserRole role, CancellationToken cancellationToken)
         {
-            var userExist = await _context.Users.AnyAsync(u => u.Email == newUserRequest.Email, cancellationToken);
+            var userExist = await _context.Users
+                .AsNoTracking()
+                .AnyAsync(u => u.Email == newUserRequest.Email, cancellationToken);
 
             if (userExist)
             {

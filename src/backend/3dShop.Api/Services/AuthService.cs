@@ -2,8 +2,8 @@
 using _3dShop.Api.Exceptions;
 using _3dShop.Api.Helpers;
 using _3dShop.Api.Models.DTOs.Users;
-using _3dShop.Api.Models.Entities;
 using _3dShop.Api.Models.Enums;
+using _3dShop.Api.Services.Internals;
 using Microsoft.EntityFrameworkCore;
 
 namespace _3dShop.Api.Services
@@ -22,7 +22,9 @@ namespace _3dShop.Api.Services
         }
         public async Task<AuthUserResponse> SignInAsync(AuthUserRequest user, CancellationToken cancellationToken)
         {
-            var userExist = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email, cancellationToken);
+            var userExist = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email == user.Email, cancellationToken);
 
             var hash = userExist?.PasswordHash ?? "$2a$11$dummyhashvaluetomakeconstanttime"; //Verifica se o password existe, se não houver define um dummy
             bool matchPass = BCrypt.Net.BCrypt.Verify(user.Password, hash); //Verifica se o password enviad peloo usuárioo bate com o registrad no banco;

@@ -12,6 +12,7 @@ using Microsoft.OpenApi;
 using Serilog;
 using System.Text;
 using _3dShop.Api.Models.DTOs.Category;
+using _3dShop.Api.Services.Internals;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +76,33 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(jwt["Secret"]))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = async context =>
+        {
+            context.HandleResponse();
+
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+                message = "Você precisa estar autenticado para acessar este recurso."
+            });
+        },
+
+        OnForbidden = async context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Response.ContentType = "application/json";
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+                message = "Você não possui permissão para acessar este recurso."
+            });
+        }
     };
 });
 

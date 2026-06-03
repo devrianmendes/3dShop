@@ -14,40 +14,50 @@ namespace _3dShop.Api.Services
             _context = context;
         }
 
-        public async Task<GetCategoryByIdResponse> GetCategoryByIdAsync(Guid id)
+        public async Task<IEnumerable<SingleCategoryResponse>> GetAllAsync(CancellationToken cancellationToken)
         {
-            if (id == Guid.Empty)
-            {
-                throw new BadRequestException("Id inválido");
-            }
+            return await _context.Categories
+                .AsNoTracking()
+                .Select(e => new SingleCategoryResponse()
+                    {
+                        Id = e.Id,
+                        NamePt = e.NamePt,
+                        NameEn = e.NameEn
+                    })
+                .ToListAsync(cancellationToken);
+        }
 
-            var requestedCategory = await _context.Categories.Include(c => c.ProductList)
-                .FirstOrDefaultAsync(c => c.Id == id);
+
+        public async Task<SingleCategoryResponse> GetCategoryByIdAsync(Guid categoryId, CancellationToken cancellationToken)
+        {
+            var requestedCategory = await _context.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == categoryId, cancellationToken);
 
             if (requestedCategory is null)
             {
                 throw new NotFoundException("Categoria não encontrada.");
             }
 
-            return new GetCategoryByIdResponse()
+            return new SingleCategoryResponse()
             {
                 Id = requestedCategory.Id,
                 NameEn = requestedCategory.NameEn,
                 NamePt = requestedCategory.NamePt,
-                ProductList = requestedCategory.ProductList
+                //ProductList = requestedCategory.ProductList
             };
         }
 
-        public async Task<NewCategoryResponse> CreateCategory(NewCategoryRequest newCategoryRequest, CancellationToken cancellationToken)
+        public async Task<NewCategoryResponse> CreateCategoryAsync(NewCategoryRequest newCategoryRequest, CancellationToken cancellationToken)
         {
-            if (String.IsNullOrWhiteSpace(newCategoryRequest.NamePt) || String.IsNullOrWhiteSpace(newCategoryRequest.NameEn))
+            if (string.IsNullOrWhiteSpace(newCategoryRequest.NamePt) || string.IsNullOrWhiteSpace(newCategoryRequest.NameEn))
             {
                 throw new BadRequestException("O nome da categoria não podem estar vazios.");
             }
 
             var categoryExist = await _context.Categories.AnyAsync(c =>
             c.NamePt == newCategoryRequest.NamePt.Trim().ToLower() ||
-            c.NameEn == newCategoryRequest.NameEn.Trim().ToLower());
+            c.NameEn == newCategoryRequest.NameEn.Trim().ToLower(), cancellationToken);
 
             if (categoryExist)
             {
@@ -60,8 +70,8 @@ namespace _3dShop.Api.Services
                 NameEn = newCategoryRequest.NameEn.Trim().ToLower(),
             };
 
-            await _context.Categories.AddAsync(newCategory);
-            await _context.SaveChangesAsync();
+            await _context.Categories.AddAsync(newCategory, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
             return new NewCategoryResponse()
             {

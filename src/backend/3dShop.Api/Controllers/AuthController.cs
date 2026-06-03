@@ -42,6 +42,7 @@ namespace _3dShop.Api.Controllers
             return Ok(token);
         }
 
+        [Authorize(Roles = "Customer")]
         [HttpPost("register")]
         [ProducesResponseType<NewUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
