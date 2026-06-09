@@ -1,6 +1,8 @@
 ﻿using _3dShop.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Reflection;
+using System.Text;
 
 namespace _3dShop.Api.Data
 {

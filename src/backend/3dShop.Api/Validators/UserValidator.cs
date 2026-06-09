@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace _3dShop.Api.Validators
 {
-    public class UserValidator : AbstractValidator<ValidateUserInterface>
+    public class UserValidator : AbstractValidator<IValidateUser>
     {
         public UserValidator()
         {

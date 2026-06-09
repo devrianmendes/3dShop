@@ -2,8 +2,8 @@ using _3dShop.Api.Data;
 using _3dShop.Api.Helpers;
 using _3dShop.Api.Middlewares;
 using _3dShop.Api.Services;
+using _3dShop.Api.Services.Internals;
 using _3dShop.Api.Validators;
-using _3dShop.Api.Models.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Serilog;
 using System.Text;
-using _3dShop.Api.Models.DTOs.Category;
-using _3dShop.Api.Services.Internals;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,8 +32,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); //Swagger
 
 //Validators
-builder.Services.AddScoped<IValidator<ValidateUserInterface>, UserValidator>();
-builder.Services.AddScoped<IValidator<NewCategoryRequest>, CategoryValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CategoryValidator>(); //Com o pacote fluentvalidation.dependencyinjectionextensions, apenas essa linha busca todos os validators que herdam AbstractValidator
 
 //Services
 builder.Services.AddScoped<AuthService>();

@@ -13,9 +13,9 @@ namespace _3dShop.Api.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IValidator<ValidateUserInterface> _validate;
+        private readonly IValidator<IValidateUser> _validate;
         private readonly UserService _userService;
-        public UserController(IValidator<ValidateUserInterface> validate, UserService userService)
+        public UserController(IValidator<IValidateUser> validate, UserService userService)
         {
             _validate = validate;
             _userService = userService;

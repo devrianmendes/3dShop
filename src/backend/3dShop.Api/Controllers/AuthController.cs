@@ -20,9 +20,9 @@ namespace _3dShop.Api.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly JwtHelper _jwtHelper;
         private readonly AuthService _authService;
-        private readonly IValidator<ValidateUserInterface> _validator; //Interface fornecida pelo fluent validation
+        private readonly IValidator<IValidateUser> _validator; //Interface fornecida pelo fluent validation
 
-        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<ValidateUserInterface> validator, AuthService authService)
+        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<IValidateUser> validator, AuthService authService)
         {
             _logger = logger;
             _jwtHelper = jwtHelper;
