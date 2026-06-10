@@ -1,6 +1,5 @@
 using _3dShop.Api.Exceptions;
 using _3dShop.Api.Models.DTOs;
-using _3dShop.Api.Models.Interfaces;
 using _3dShop.Api.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +10,9 @@ namespace _3dShop.Api.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly IValidator<IValidateCategory> _validate;
+        private readonly IValidator<CategoryNamesBase> _validate;
         private readonly CategoryService _categoryService;
-        public CategoryController(IValidator<IValidateCategory> validate, CategoryService categoryService)
+        public CategoryController(IValidator<CategoryNamesBase> validate, CategoryService categoryService)
         {
             _validate = validate;
             _categoryService = categoryService;
@@ -21,36 +20,35 @@ namespace _3dShop.Api.Controllers
 
         [Authorize(Roles = "Admin, Seller")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
         [HttpPost]
-        [ProducesResponseType<CategoryResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<CreateCategoryResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<CategoryResponse>> CreateCategoryAsync(CategoryRequest CategoryRequest, CancellationToken cancellationToken)
+        public async Task<ActionResult<CreateCategoryResponse>> CreateCategoryAsync(CreateCategoryRequest categoryRequest, CancellationToken cancellationToken)
         {
-            _validate.ValidateAndThrow(CategoryRequest);
+            await _validate.ValidateAndThrowAsync(categoryRequest, cancellationToken);
 
-            CategoryResponse CategoryResponse = await _categoryService.CreateCategoryAsync(CategoryRequest, cancellationToken);
+            CreateCategoryResponse categoryResponse = await _categoryService.CreateCategoryAsync(categoryRequest, cancellationToken);
 
             return CreatedAtRoute( //Por algum motivo, createdAtAction não funcionou de jeito nenhum
                 nameof(GetByIdAsync),
-                new { CategoryId = CategoryResponse.Id },
-                CategoryResponse
+                new { CategoryId = categoryResponse.Id },
+                categoryResponse
             );
         }
 
         //[Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
-        [ProducesResponseType<CategoryResponse>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<CategoryListResponse>(StatusCodes.Status200OK)]
         [HttpGet]
         public async Task<ActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            IEnumerable<CategoryResponse> categories = await _categoryService.GetAllCategoriesAsync(cancellationToken);
+            CategoryListResponse categories = await _categoryService.GetAllCategoriesAsync(cancellationToken);
 
             return Ok(categories);
         }
 
         [Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
-        [ProducesResponseType<CategoryResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<GetCategoryResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{CategoryId:guid}", Name = "GetByIdAsync")]
         public async Task<ActionResult> GetByIdAsync([FromRoute] Guid categoryId, CancellationToken cancellationToken)
@@ -60,27 +58,30 @@ namespace _3dShop.Api.Controllers
                 throw new BadRequestException("Id inválido");
             }
 
-            CategoryResponse category = await _categoryService.GetCategoryByIdAsync(categoryId, cancellationToken);
+            GetCategoryResponse category = await _categoryService.GetCategoryByIdAsync(categoryId, cancellationToken);
 
             return Ok(category);
         }
 
         [Authorize(Roles = "Admin, Seller")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
         [HttpPut("{categoryId:guid}")] //:guid garante que o Guid passado tem formato válido
-        [ProducesResponseType<CategoryResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<UpdateCategoryResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<CategoryResponse>> UpdateCategoryAsync(
+        public async Task<ActionResult<UpdateCategoryResponse>> UpdateCategoryAsync(
             [FromRoute] Guid categoryId, 
             [FromBody] UpdateCategoryRequest updateCategoryRequest, 
             CancellationToken cancellationToken)
         {
-            updateCategoryRequest.Id = categoryId;
+            if (categoryId == Guid.Empty)
+            {
+                throw new BadRequestException("Id inválido");
+            }
 
-            //_validate.ValidateAndThrow(updateCategoryRequest);
+            await _validate.ValidateAndThrowAsync(updateCategoryRequest);
 
-            CategoryResponse newCategoryResponse = await _categoryService.UpdateCategoryAsync(updateCategoryRequest, cancellationToken);
+            UpdateCategoryResponse newCategoryResponse = await _categoryService.UpdateCategoryAsync(categoryId, updateCategoryRequest, cancellationToken);
 
             return Ok(newCategoryResponse);
         }
