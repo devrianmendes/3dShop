@@ -1,7 +1,7 @@
 ﻿using _3dShop.Api.Data;
 using _3dShop.Api.Exceptions;
 using _3dShop.Api.Helpers;
-using _3dShop.Api.Models.DTOs.Users;
+using _3dShop.Api.Models.DTOs;
 using _3dShop.Api.Models.Enums;
 using _3dShop.Api.Services.Internals;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +10,13 @@ namespace _3dShop.Api.Services
 {
     public class AuthService
     {
-        private readonly CreateUserService _createUserService;
+        private readonly CreateUserService _service;
         private readonly JwtHelper _jwthelper;
         private readonly AppDbContext _context;
 
         public AuthService(CreateUserService createUserService, AppDbContext context, JwtHelper jwthelper)
         {
-            _createUserService = createUserService;
+            _service = createUserService;
             _context = context;
             _jwthelper = jwthelper;
         }
@@ -44,9 +44,9 @@ namespace _3dShop.Api.Services
         }
 
         //Service externalizado para prevenir duplicação de código, pois criar um admin/seller e um usuário normal é exatamente o mesmo código, com exceção da role
-        public async Task<NewUserResponse> SignUpAsync(NewUserRequest newUserRequest, CancellationToken cancellationToken)
+        public async Task<CreateUserResponse> SignUpAsync(CreateUserRequest createUserRequest, CancellationToken cancellationToken)
         {
-            return await _createUserService.CreateUserAsync(newUserRequest, UserRole.Customer, cancellationToken);
+            return await _service.CreateUserAsync(createUserRequest, UserRole.Customer, cancellationToken);
         }
     }
 }

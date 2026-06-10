@@ -26,7 +26,7 @@
     public record CreateCategoryResponse : CategoryResponseBase;
     public record UpdateCategoryResponse : CategoryResponseBase;
 
-    public class CategoryListResponse
+    public record CategoryListResponse
     {
         public IEnumerable<GetCategoryResponse> CategoryList { get; set; } = [];
     }

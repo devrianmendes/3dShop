@@ -1,35 +1,42 @@
 ﻿using _3dShop.Api.Models.Enums;
-using _3dShop.Api.Models.Interfaces;
 
 namespace _3dShop.Api.Models.DTOs
 {
-    public class AuthUserRequest : IValidateUser
+    // --- Bases ---
+
+    public abstract record UserRequestBase
     {
         public required string Email { get; set; }
         public required string Password { get; set; }
     }
 
-    public class NewUserRequest : IValidateUser
+    public abstract record UserResponseBase
+    {
+        public required Guid Id { get; init; }
+        public required string Name { get; init; }
+        public required string Email { get; init; }
+    }
+
+    //--- Requests ---
+
+    public record AuthUserRequest : UserRequestBase;
+
+    public record CreateUserRequest : UserRequestBase
     {
         public required string Name { get; set; }
-        public required string Email { get; set; }
-        public required string Password { get; set; }
         public required UserRole UserRole { get; set; }
         public required bool IsActive { get; set; }
     }
 
-    public class AuthUserResponse
-    {
-        public Guid Id { get; set; }
-        public required string Name { get; set; }
-        public required string Email { get; set; }
-        public required string Token { get; set; }
-    }
+    //--- Responses ---
 
-    public class NewUserResponse
-    {
-        public Guid Id { get; set; }
-        public required string Name { get; set; }
-        public required string Email { get; set; }
-    }
+    public record AuthUserResponse : UserResponseBase
+        {
+            public required string Token { get; set; }
+        }
+
+    public record CreateUserResponse : UserResponseBase;
+
+
+
 }

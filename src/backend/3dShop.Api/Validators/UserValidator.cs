@@ -1,10 +1,9 @@
-﻿using _3dShop.Api.Models.DTOs.Users;
-using _3dShop.Api.Models.Interfaces;
+﻿using _3dShop.Api.Models.DTOs;
 using FluentValidation;
 
 namespace _3dShop.Api.Validators
 {
-    public class UserValidator : AbstractValidator<IValidateUser>
+    public class UserValidator : AbstractValidator<UserRequestBase>
     {
         public UserValidator()
         {

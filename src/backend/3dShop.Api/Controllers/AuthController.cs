@@ -1,14 +1,8 @@
 ﻿using _3dShop.Api.Helpers;
-using _3dShop.Api.Models.DTOs.Users;
-using _3dShop.Api.Models.Entities;
-using _3dShop.Api.Models.Interfaces;
+using _3dShop.Api.Models.DTOs;
 using _3dShop.Api.Services;
-using _3dShop.Api.Validators;
 using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _3dShop.Api.Controllers
@@ -20,9 +14,9 @@ namespace _3dShop.Api.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly JwtHelper _jwtHelper;
         private readonly AuthService _authService;
-        private readonly IValidator<IValidateUser> _validator; //Interface fornecida pelo fluent validation
+        private readonly IValidator<UserRequestBase> _validator; //Interface fornecida pelo fluent validation
 
-        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<IValidateUser> validator, AuthService authService)
+        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<UserRequestBase> validator, AuthService authService)
         {
             _logger = logger;
             _jwtHelper = jwtHelper;
@@ -44,25 +38,25 @@ namespace _3dShop.Api.Controllers
 
         [Authorize(Roles = "Customer")]
         [HttpPost("register")]
-        [ProducesResponseType<NewUserResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<CreateUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> SignUpAsync(NewUserRequest newUserRequest, CancellationToken cancellationToken)
+        public async Task<ActionResult> SignUpAsync(CreateUserRequest createUserRequest, CancellationToken cancellationToken)
         {
-            _validator.ValidateAndThrow(newUserRequest);
+            _validator.ValidateAndThrow(createUserRequest);
 
-            NewUserResponse createdUser = await _authService.SignUpAsync(newUserRequest, cancellationToken);
+            CreateUserResponse createdUser = await _authService.SignUpAsync(createUserRequest, cancellationToken);
 
             return Ok(createdUser);
         }
 
         [HttpPost("refresh")]
-        [ProducesResponseType<NewUserResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<CreateUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> RefreshTokenAsync(NewUserRequest newUserRequest, CancellationToken cancellationToken)
+        public async Task<ActionResult> RefreshTokenAsync(CreateUserRequest createUserRequest, CancellationToken cancellationToken)
         {
-            _validator.ValidateAndThrow(newUserRequest);
+            _validator.ValidateAndThrow(createUserRequest);
 
-            NewUserResponse createdUser = await _authService.SignUpAsync(newUserRequest, cancellationToken);
+            CreateUserResponse createdUser = await _authService.SignUpAsync(createUserRequest, cancellationToken);
 
             return Ok(createdUser);
         }
