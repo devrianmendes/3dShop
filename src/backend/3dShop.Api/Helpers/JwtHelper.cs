@@ -1,6 +1,10 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using _3dShop.Api.Models.DTOs;
+using _3dShop.Api.Models.Entities;
+using _3dShop.Api.Models.Enums;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace _3dShop.Api.Helpers
@@ -11,27 +15,31 @@ namespace _3dShop.Api.Helpers
         private readonly string _issuer;
         private readonly string _audience;
         private readonly int _expirationMinutes;
+        private readonly IHttpContextAccessor _httpContext;
 
-        public JwtHelper(IConfiguration configuration)
+        public JwtHelper(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             // Pega as configs do appsettings.json
             _secret = configuration["JwtSettings:Secret"];
             _issuer = configuration["JwtSettings:Issuer"];
             _audience = configuration["JwtSettings:Audience"];
-            _expirationMinutes = int.Parse(configuration["JwtSettings:ExpirationMinutes"]);
+            _expirationMinutes = int.Parse(configuration["JwtSettings:AccessTokenExpirationMinutes"]);
+            _httpContext = httpContextAccessor;
         }
 
+        //public sealed record RefreshToken(string Token, DateTime ExpirationDate, Guid UserId);
+
         // Gera token JWT
-        public string GenerateToken(string userId, string email, string name, string role)
+        public string GenerateAccessToken(Guid userId, string email, string name, UserRole role)
         {
             var claims = new[]
             {
                 //Claim é um tipo do asp.net utilizado para identificação. Armazenamos cada dado do usuario em um claim e os claims agrupados em um array. Formato do claim: {chave: valor}
                 //JwtRegisteredClaimNames é um objeto com chaves como as abaixo. Serve apenas para não precisar escrever o nome do campo com string ("sub", "email"...). Simples assim.
-                new Claim(JwtRegisteredClaimNames.Sub, userId), 
+                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()), 
                 new Claim(JwtRegisteredClaimNames.Email, email), 
                 new Claim(JwtRegisteredClaimNames.Name, name), 
-                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.Role, role.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) //Um novo id que ajuda a instanciar um token. Se um usuário logasse em dispositivos diferentes sem esse dado extra, seus tokens seriam exatamente iguais.
             }; //Formato final: [{sub: userId}, {Email: email}, {Name: name}, {Jti: new Guid}]
 
@@ -47,6 +55,21 @@ namespace _3dShop.Api.Helpers
              );
 
             return new JwtSecurityTokenHandler().WriteToken(token); //Retorna o token transformado em string;
+        }
+
+        public RefreshToken GenerateRefreshToken(Guid userId, RefreshTokenRequest actualToken)
+        {
+            return new RefreshToken()
+            {
+                UserId = userId,
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpirationDate = DateTime.UtcNow.AddDays(7),
+                RevokedAt = null,
+                ReplacedByToken = actualToken.RefreshToken is not null ? actualToken.RefreshToken : null,
+                DeviceId = actualToken.DeviceId.ToString(),
+                UserAgent = _httpContext.HttpContext?.Request.Headers.UserAgent.ToString(),
+                IpAddress = _httpContext.HttpContext?.Connection.RemoteIpAddress.ToString(),
+            };
         }
 
         // Valida token e retorna ClaimsPrincipal

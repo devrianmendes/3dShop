@@ -14,6 +14,7 @@ namespace _3dShop.Api.Models.Entities
         public ICollection<Order>? OrderList { get; set; }  //Navegação - Facilita acesso a entidade relacionada no código
         public ICollection<OrderStatusHistory>? OrderStatusHistory { get; set; }  //Navegação - Facilita acesso a entidade relacionada no código
         public Cart? Cart { get; set; }  //Navegação - Facilita acesso a entidade relacionada no código
+        public ICollection<RefreshToken>? RefreshToken { get; set; }  //Navegação - Facilita acesso a entidade relacionada no código
 
         //public User(string name, string email, string passwordHash, UserRole userRole, bool isActive)
         //{

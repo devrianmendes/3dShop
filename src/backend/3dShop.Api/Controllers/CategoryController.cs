@@ -79,7 +79,7 @@ namespace _3dShop.Api.Controllers
                 throw new BadRequestException("Id inválido");
             }
 
-            await _validate.ValidateAndThrowAsync(updateCategoryRequest);
+            await _validate.ValidateAndThrowAsync(updateCategoryRequest, cancellationToken);
 
             UpdateCategoryResponse newCategoryResponse = await _categoryService.UpdateCategoryAsync(categoryId, updateCategoryRequest, cancellationToken);
 

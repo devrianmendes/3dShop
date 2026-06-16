@@ -1,5 +1,7 @@
-﻿using _3dShop.Api.Helpers;
+﻿using _3dShop.Api.Exceptions;
+using _3dShop.Api.Helpers;
 using _3dShop.Api.Models.DTOs;
+using _3dShop.Api.Models.Entities;
 using _3dShop.Api.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -12,14 +14,14 @@ namespace _3dShop.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        private readonly JwtHelper _jwtHelper;
+        //private readonly JwtHelper _jwtHelper;
         private readonly AuthService _authService;
         private readonly IValidator<UserRequestBase> _validator; //Interface fornecida pelo fluent validation
 
-        public AuthController(ILogger<AuthController> logger, JwtHelper jwtHelper, IValidator<UserRequestBase> validator, AuthService authService)
+        public AuthController(ILogger<AuthController> logger, /*JwtHelper jwtHelper,*/ IValidator<UserRequestBase> validator, AuthService authService)
         {
             _logger = logger;
-            _jwtHelper = jwtHelper;
+            //_jwtHelper = jwtHelper;
             _validator = validator;
             _authService = authService;
         }
@@ -31,9 +33,17 @@ namespace _3dShop.Api.Controllers
         {
             _validator.ValidateAndThrow(user);
 
-            AuthUserResponse token = await _authService.SignInAsync(user, cancellationToken);
+            var token = await _authService.SignInAsync(user, cancellationToken);
 
-            return Ok(token);
+            Response.Cookies.Append("refreshToken", token.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = token.RefreshTokenExpiration
+            });
+
+            return Ok(token.AuthUserResponse);
         }
 
         [Authorize(Roles = "Customer")]
@@ -52,13 +62,18 @@ namespace _3dShop.Api.Controllers
         [HttpPost("refresh")]
         [ProducesResponseType<CreateUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> RefreshTokenAsync(CreateUserRequest createUserRequest, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<RefreshTokenResponse>> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest, CancellationToken cancellationToken)
         {
-            _validator.ValidateAndThrow(createUserRequest);
 
-            CreateUserResponse createdUser = await _authService.SignUpAsync(createUserRequest, cancellationToken);
+            if (string.IsNullOrWhiteSpace(refreshTokenRequest.RefreshToken))
+            {
+                return Unauthorized();
+            }
 
-            return Ok(createdUser);
+            RefreshTokenResponse refreshedToken = await _authService.RefreshTokenAsync(refreshTokenRequest, cancellationToken);
+
+            return Ok(refreshedToken);
         }
     }
 }

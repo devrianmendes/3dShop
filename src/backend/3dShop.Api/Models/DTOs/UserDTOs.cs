@@ -1,4 +1,5 @@
-﻿using _3dShop.Api.Models.Enums;
+﻿using _3dShop.Api.Models.Entities;
+using _3dShop.Api.Models.Enums;
 
 namespace _3dShop.Api.Models.DTOs
 {
@@ -32,8 +33,9 @@ namespace _3dShop.Api.Models.DTOs
 
     public record AuthUserResponse : UserResponseBase
         {
-            public required string Token { get; set; }
-        }
+            public required string AccessToken { get; set; }
+            //public required RefreshToken RefreshToken { get; set; }
+    }
 
     public record CreateUserResponse : UserResponseBase;
 

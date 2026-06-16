@@ -23,6 +23,7 @@ namespace _3dShop.Api.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<RefreshToken> RefreshToken { get; set; }
 
         // Aplica automaticamente todas as classes que implementam IEntityTypeConfiguration<T>
         protected override void OnModelCreating(ModelBuilder modelBuilder)

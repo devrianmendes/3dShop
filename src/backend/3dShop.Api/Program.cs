@@ -30,6 +30,8 @@ builder.Services.AddSingleton<JwtHelper>(); //Registra o jwthelper no DI. Os sec
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); //Swagger
+builder.Services.AddHttpContextAccessor(); //Permite utilizar o httpContext em outras classes além do controller (no meu caso, no jwthelper)
+
 
 //Validators
 builder.Services.AddValidatorsFromAssemblyContaining<CategoryValidator>(); //Com o pacote fluentvalidation.dependencyinjectionextensions, apenas essa linha busca todos os validators que herdam AbstractValidator
