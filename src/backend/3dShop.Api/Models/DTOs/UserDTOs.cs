@@ -27,6 +27,7 @@ namespace _3dShop.Api.Models.DTOs
         public required string Name { get; set; }
         public required UserRole UserRole { get; set; }
         public required bool IsActive { get; set; }
+        //public Guid? DeviceId { get; set; }
     }
 
     //--- Responses ---

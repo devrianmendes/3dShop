@@ -6,6 +6,7 @@ using _3dShop.Api.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static _3dShop.Api.Services.AuthService;
 
 namespace _3dShop.Api.Controllers
 {
@@ -29,11 +30,11 @@ namespace _3dShop.Api.Controllers
         [HttpPost("signin")]
         [ProducesResponseType<AuthUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AuthUserResponse>> SignInAsync(AuthUserRequest user, CancellationToken cancellationToken)
+        public async Task<ActionResult<AuthUserResponse>> SignInAsync(AuthUserRequest user, Guid deviceId, CancellationToken cancellationToken)
         {
             _validator.ValidateAndThrow(user);
 
-            var token = await _authService.SignInAsync(user, cancellationToken);
+            var token = await _authService.SignInAsync(user, deviceId, cancellationToken);
 
             Response.Cookies.Append("refreshToken", token.RefreshToken, new CookieOptions
             {
@@ -46,15 +47,15 @@ namespace _3dShop.Api.Controllers
             return Ok(token.AuthUserResponse);
         }
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpPost("register")]
         [ProducesResponseType<CreateUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> SignUpAsync(CreateUserRequest createUserRequest, CancellationToken cancellationToken)
+        public async Task<ActionResult> SignUpAsync(CreateUserRequest createUserRequest, Guid deviceId, CancellationToken cancellationToken)
         {
             _validator.ValidateAndThrow(createUserRequest);
 
-            CreateUserResponse createdUser = await _authService.SignUpAsync(createUserRequest, cancellationToken);
+            CreateUserResponse createdUser = await _authService.SignUpAsync(createUserRequest, deviceId, cancellationToken);
 
             return Ok(createdUser);
         }
@@ -63,17 +64,27 @@ namespace _3dShop.Api.Controllers
         [ProducesResponseType<CreateUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<RefreshTokenResponse>> RefreshTokenAsync(RefreshTokenRequest refreshTokenRequest, CancellationToken cancellationToken)
+        public async Task<ActionResult<string>> RefreshTokenAsync(Guid deviceId, CancellationToken cancellationToken)
         {
 
-            if (string.IsNullOrWhiteSpace(refreshTokenRequest.RefreshToken))
+            var rawRefreshToken = Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrWhiteSpace(rawRefreshToken))
             {
                 return Unauthorized();
             }
 
-            RefreshTokenResponse refreshedToken = await _authService.RefreshTokenAsync(refreshTokenRequest, cancellationToken);
+            RefreshTokenResponse refreshedToken = await _authService.RefreshTokenAsync(rawRefreshToken, deviceId, cancellationToken);
 
-            return Ok(refreshedToken);
+            Response.Cookies.Append("refreshToken", refreshedToken.newRefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = refreshedToken.ExpirationDate
+            });
+
+            return Ok(refreshedToken.newAccessToken);
         }
     }
 }

@@ -1,5 +1,6 @@
 using _3dShop.Api.Data;
 using _3dShop.Api.Exceptions;
+using _3dShop.Api.Helpers;
 using _3dShop.Api.Models.DTOs;
 using _3dShop.Api.Models.Entities;
 using _3dShop.Api.Models.Enums;
@@ -10,12 +11,14 @@ namespace _3dShop.Api.Services.Internals
     public class CreateUserService
     {
         private readonly AppDbContext _context;
-        public CreateUserService(AppDbContext context)
+        private readonly JwtHelper _jwtHelper;
+        public CreateUserService(AppDbContext context, JwtHelper jwtHelper)
         {
             _context = context;
+            _jwtHelper = jwtHelper;
         }
 
-        public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequest newUserRequest, UserRole role, CancellationToken cancellationToken)
+        public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequest newUserRequest, UserRole role, CancellationToken cancellationToken, Guid? deviceId = null)
         {
             var userExist = await _context.Users
                 .AsNoTracking()
@@ -35,7 +38,10 @@ namespace _3dShop.Api.Services.Internals
                 UserRole = role,
             };
 
+            var refreshToken = _jwtHelper.GenerateRefreshToken(newUser.Id, deviceId);
+
             await _context.Users.AddAsync(newUser, cancellationToken);
+            await _context.RefreshToken.AddAsync(refreshToken, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
 

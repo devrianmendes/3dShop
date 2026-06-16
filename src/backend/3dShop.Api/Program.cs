@@ -64,11 +64,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     var jwt = builder.Configuration.GetSection("JwtSettings");
 
     options.TokenValidationParameters = new TokenValidationParameters
-    {
+    { 
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+
+        ClockSkew = TimeSpan.Zero, // 🔥 remove tolerância de expiração
 
         ValidIssuer = jwt["Issuer"],
         ValidAudience = jwt["Audience"],
@@ -82,8 +84,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         OnChallenge = async context =>
         {
             context.HandleResponse();
-
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+             
+              context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = "application/json";
 
             await context.Response.WriteAsJsonAsync(new
@@ -146,7 +148,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
-app.UseAuthentication(); //Middleware que verifica autenticidade do JWT
-app.UseAuthorization(); //Aplica regras do Data Annotation [Authorize]
+app.UseAuthentication(); //Middleware que verifica autenticidade do JWT (QUEM É VOCÊ?)
+app.UseAuthorization(); //Aplica regras do Data Annotation [Authorize] (O QUE VOCÊ PODE FAZER)
 app.MapControllers();
 app.Run();

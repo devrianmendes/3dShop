@@ -37,7 +37,7 @@ namespace _3dShop.Api.Controllers
             );
         }
 
-        //[Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
+        [Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
         [ProducesResponseType<CategoryListResponse>(StatusCodes.Status200OK)]
         [HttpGet]
         public async Task<ActionResult> GetAllAsync(CancellationToken cancellationToken)

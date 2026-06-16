@@ -57,7 +57,7 @@ namespace _3dShop.Api.Helpers
             return new JwtSecurityTokenHandler().WriteToken(token); //Retorna o token transformado em string;
         }
 
-        public RefreshToken GenerateRefreshToken(Guid userId, RefreshTokenRequest actualToken)
+        public RefreshToken GenerateRefreshToken(Guid userId, Guid? deviceId)
         {
             return new RefreshToken()
             {
@@ -65,39 +65,17 @@ namespace _3dShop.Api.Helpers
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
                 ExpirationDate = DateTime.UtcNow.AddDays(7),
                 RevokedAt = null,
-                ReplacedByToken = actualToken.RefreshToken is not null ? actualToken.RefreshToken : null,
-                DeviceId = actualToken.DeviceId.ToString(),
+                ReplacedByToken = null,
+                DeviceId = deviceId.ToString(),
                 UserAgent = _httpContext.HttpContext?.Request.Headers.UserAgent.ToString(),
-                IpAddress = _httpContext.HttpContext?.Connection.RemoteIpAddress.ToString(),
+                IpAddress = _httpContext.HttpContext?.Connection.RemoteIpAddress?.ToString(),
             };
         }
 
-        // Valida token e retorna ClaimsPrincipal
-        //public ClaimsPrincipal? ValidateToken(string token)
-        //{
-        //    var tokenHandler = new JwtSecurityTokenHandler(); //Validador do JWT
-        //    var key = Encoding.UTF8.GetBytes(_secret); //Novamente converte o secret em byte
-
-        //    try
-        //    {
-        //        var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
-        //        {
-        //            ValidateIssuer = true,
-        //            ValidateAudience = true,
-        //            ValidateLifetime = true,
-        //            ValidateIssuerSigningKey = true,
-        //            ValidIssuer = _issuer,
-        //            ValidAudience = _audience,
-        //            IssuerSigningKey = new SymmetricSecurityKey(key),
-        //            ClockSkew = TimeSpan.Zero // evita tolerância de alguns minutos
-        //        }, out SecurityToken validatedToken);
-
-        //        return principal;
-        //    }
-        //    catch
-        //    {
-        //        return null; // token inválido ou expirado
-        //    }
-        //}
+        public void RevokeRefreshToken(RefreshToken oldToken, string newToken)
+        {
+            oldToken.RevokedAt = DateTime.UtcNow;
+            oldToken.ReplacedByToken = newToken;
+        }
     }
 }

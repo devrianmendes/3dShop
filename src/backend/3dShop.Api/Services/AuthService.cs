@@ -33,9 +33,10 @@ namespace _3dShop.Api.Services
         {
             public required string newAccessToken { get; init; }
             public required string newRefreshToken { get; init; }
+            public required DateTime ExpirationDate { get; init; }
         }
 
-        public async Task<SignInResult> SignInAsync(AuthUserRequest user, CancellationToken cancellationToken)
+        public async Task<SignInResult> SignInAsync(AuthUserRequest user, Guid deviceId, CancellationToken cancellationToken)
         {
             var userExist = await _context.Users
                 .AsNoTracking()
@@ -48,7 +49,11 @@ namespace _3dShop.Api.Services
                 throw new UnauthorizedException("Usuário ou senha inválidos.");
 
             string accessToken = _jwthelper.GenerateAccessToken(userExist.Id, userExist.Email, userExist.Name, userExist.UserRole);
-            RefreshToken refreshToken = _jwthelper.GenerateRefreshToken(userExist.Id);
+            RefreshToken refreshToken = _jwthelper.GenerateRefreshToken(userExist.Id, deviceId);
+
+            var oldRefreshToken = await _context.RefreshToken.Where(t => t.RevokedAt == null).FirstOrDefaultAsync(t => t.UserId == userExist.Id);
+
+            if(oldRefreshToken is not null) _jwthelper.RevokeRefreshToken(oldRefreshToken, refreshToken.Token);
 
             await _context.RefreshToken.AddAsync(refreshToken, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
@@ -68,14 +73,14 @@ namespace _3dShop.Api.Services
         }
 
         //Service externalizado para prevenir duplicação de código, pois criar um admin/seller e um usuário normal é exatamente o mesmo código, com exceção da role
-        public async Task<CreateUserResponse> SignUpAsync(CreateUserRequest createUserRequest, CancellationToken cancellationToken)
+        public async Task<CreateUserResponse> SignUpAsync(CreateUserRequest createUserRequest, Guid deviceId,  CancellationToken cancellationToken)
         {
-            return await _service.CreateUserAsync(createUserRequest, UserRole.Customer, cancellationToken);
+            return await _service.CreateUserAsync(createUserRequest, createUserRequest.UserRole, cancellationToken, deviceId);
         }
 
-        public async Task<RefreshTokenResult> RefreshTokenAsync(RefreshTokenRequest actualToken, CancellationToken cancellationToken)
+        public async Task<RefreshTokenResponse> RefreshTokenAsync(string rawRefreshToken, Guid deviceId, CancellationToken cancellationToken)
         {
-            var tokenExist = await _context.RefreshToken.FirstOrDefaultAsync(t => t.Token == actualToken.RefreshToken, cancellationToken);
+            var tokenExist = await _context.RefreshToken.FirstOrDefaultAsync(t => t.Token == rawRefreshToken, cancellationToken);
 
             if(tokenExist is null)
             {
@@ -94,20 +99,24 @@ namespace _3dShop.Api.Services
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == tokenExist.UserId, cancellationToken);
 
-            if(user is null)
+            if (user is null)
             {
                 throw new BadRequestException("Token inválido");
             }
 
             var newAccessToken = _jwthelper.GenerateAccessToken(user.Id, user.Email, user.Name, user.UserRole);
-            var newRefreshToken = _jwthelper.GenerateRefreshToken(user.Id, actualToken);
+            var newRefreshToken = _jwthelper.GenerateRefreshToken(user.Id, deviceId);
+
+            _jwthelper.RevokeRefreshToken(tokenExist, newRefreshToken.Token);
 
             await _context.RefreshToken.AddAsync(newRefreshToken, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-            RefreshTokenResult newToken = new()
+            RefreshTokenResponse newToken = new()
             {
                 newAccessToken = newAccessToken,
                 newRefreshToken = newRefreshToken.Token,
+                ExpirationDate = newRefreshToken.ExpirationDate
             };
 
             return newToken;

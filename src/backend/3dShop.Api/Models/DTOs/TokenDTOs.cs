@@ -2,12 +2,14 @@
 {
     public record RefreshTokenRequest
     {
-        public string? RefreshToken { get; set; }
-        public required Guid DeviceId { get; set; }
+        public required string RefreshToken { get; set; }
+        public Guid? DeviceId { get; set; }
     }
 
     public record RefreshTokenResponse
     {
-        public required string RefreshToken { get; set; }
+        public required string newRefreshToken { get; set; }
+        public required string newAccessToken { get; set; }
+        public required DateTime ExpirationDate { get; set; }
     }
 }
