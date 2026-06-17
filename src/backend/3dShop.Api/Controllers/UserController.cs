@@ -19,6 +19,12 @@ namespace _3dShop.Api.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Endpoint para administradores criarem novos usuários
+        /// </summary>
+        /// <param name="createUserRequest"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")] //Permite que apenas admin criem conta para outros admin/sellers
         [HttpPost("register")]
         [ProducesResponseType<CreateUserRequest>(StatusCodes.Status201Created)]
