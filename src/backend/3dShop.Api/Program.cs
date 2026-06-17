@@ -69,9 +69,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-
-        ClockSkew = TimeSpan.Zero, // 🔥 remove tolerância de expiração
-
+        ClockSkew = TimeSpan.Zero, //Remove tolerância de expiração, sem isso, o token vale por mais alguns minutos além do tempo definido (secrets)
         ValidIssuer = jwt["Issuer"],
         ValidAudience = jwt["Audience"],
 
