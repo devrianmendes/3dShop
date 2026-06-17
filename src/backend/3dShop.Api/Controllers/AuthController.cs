@@ -36,7 +36,7 @@ namespace _3dShop.Api.Controllers
 
             var token = await _authService.SignInAsync(user, deviceId, cancellationToken);
 
-            Response.Cookies.Append("refreshToken", token.RefreshToken, new CookieOptions
+            Response.Cookies.Append("refreshToken", token.RefreshToken, new CookieOptions //Devolve o RefreshToken por cookie para evitar acesso via JS
             {
                 HttpOnly = true,
                 Secure = true,
@@ -44,10 +44,16 @@ namespace _3dShop.Api.Controllers
                 Expires = token.RefreshTokenExpiration
             });
 
-            return Ok(token.AuthUserResponse);
+            return Ok(token.AuthUserResponse); //Devolve somente ID, Nome, Email e AccessToken via body
         }
 
-        //[Authorize(Roles = "Customer")]
+        /// <summary>
+        /// Controller para criação de novos usuários. Permite que usuários não logados criem suas próprias contas.
+        /// </summary>
+        /// <param name="createUserRequest"></param>
+        /// <param name="deviceId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         [ProducesResponseType<CreateUserResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

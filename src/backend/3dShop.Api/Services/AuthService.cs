@@ -22,6 +22,9 @@ namespace _3dShop.Api.Services
             _jwthelper = jwthelper;
         }
 
+        /// <summary>
+        /// Retorno do SignInAsync
+        /// </summary>
         public record SignInResult
         {
             public required AuthUserResponse AuthUserResponse { get; init; }
@@ -29,13 +32,14 @@ namespace _3dShop.Api.Services
             public DateTime RefreshTokenExpiration { get; init; }
         }
 
-        public record RefreshTokenResult
-        {
-            public required string newAccessToken { get; init; }
-            public required string newRefreshToken { get; init; }
-            public required DateTime ExpirationDate { get; init; }
-        }
-
+        /// <summary>
+        /// Service para realizar login de um usuário, criando os tokens para autenticação.
+        /// </summary>
+        /// <param name="user">Dados do usuário.</param>
+        /// <param name="deviceId">Identificador do dispositivo utilizado.</param>
+        /// <param name="cancellationToken">Token de cancelamento.</param>
+        /// <returns>Retorna id, nome, email e tokens do usuário.</returns>
+        /// <exception cref="UnauthorizedException"></exception>
         public async Task<SignInResult> SignInAsync(AuthUserRequest user, Guid deviceId, CancellationToken cancellationToken)
         {
             var userExist = await _context.Users
@@ -43,7 +47,7 @@ namespace _3dShop.Api.Services
                 .FirstOrDefaultAsync(u => u.Email == user.Email, cancellationToken);
 
             var hash = userExist?.PasswordHash ?? "$2a$11$dummyhashvaluetomakeconstanttime"; //Verifica se o password existe, se não houver define um dummy
-            bool matchPass = BCrypt.Net.BCrypt.Verify(user.Password, hash); //Verifica se o password enviad peloo usuárioo bate com o registrad no banco;
+            bool matchPass = BCrypt.Net.BCrypt.Verify(user.Password, hash); //Verifica se o password enviado pelo usuário bate com o registrado no banco;
 
             if (userExist is null || !matchPass) //Verifica a validade dos dois ao mesmo tempo para evitar deduções de ataques por tempo de resposta
                 throw new UnauthorizedException("Usuário ou senha inválidos.");
@@ -72,9 +76,16 @@ namespace _3dShop.Api.Services
             };
         }
 
-        //Service externalizado para prevenir duplicação de código, pois criar um admin/seller e um usuário normal é exatamente o mesmo código, com exceção da role
+        /// <summary>
+        /// Service para criação de um novo usuário criar sua própria conta.
+        /// </summary>
+        /// <param name="createUserRequest">Dados do usuário.</param>
+        /// <param name="deviceId">Id do dispositivo utilizado.</param>
+        /// <param name="cancellationToken">Token de cancelamento de requisição.</param>
+        /// <returns>Retorna id, nome e e-mail do usuário.</returns>
         public async Task<CreateUserResponse> SignUpAsync(CreateUserRequest createUserRequest, Guid deviceId,  CancellationToken cancellationToken)
         {
+            //Service externalizado para prevenir duplicação de código, pois criar um admin/seller e um usuário normal é exatamente o mesmo código, com exceção da role
             return await _service.CreateUserAsync(createUserRequest, createUserRequest.UserRole, cancellationToken, deviceId);
         }
 
@@ -82,7 +93,7 @@ namespace _3dShop.Api.Services
         {
             var tokenExist = await _context.RefreshToken.FirstOrDefaultAsync(t => t.Token == rawRefreshToken, cancellationToken);
 
-            if(tokenExist is null)
+            if (tokenExist is null)
             {
                 throw new UnauthorizedException("Refresh Token não existe.");
             }

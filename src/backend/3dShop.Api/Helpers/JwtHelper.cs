@@ -27,9 +27,14 @@ namespace _3dShop.Api.Helpers
             _httpContext = httpContextAccessor;
         }
 
-        //public sealed record RefreshToken(string Token, DateTime ExpirationDate, Guid UserId);
-
-        // Gera token JWT
+        /// <summary>
+        /// Gera um novo AccessToken para um usuário.
+        /// </summary>
+        /// <param name="userId">Identificador do usuário.</param>
+        /// <param name="email">E-mail do usuário.</param>
+        /// <param name="name">Nome do usuário.</param>
+        /// <param name="role">Role do usuário.</param>
+        /// <returns>Retorna o token criado.</returns>
         public string GenerateAccessToken(Guid userId, string email, string name, UserRole role)
         {
             var claims = new[]
@@ -57,6 +62,12 @@ namespace _3dShop.Api.Helpers
             return new JwtSecurityTokenHandler().WriteToken(token); //Retorna o token transformado em string;
         }
 
+        /// <summary>
+        /// Gera um novo RefreshToken para um usuário.
+        /// </summary>
+        /// <param name="userId">Identificador do usuário.</param>
+        /// <param name="deviceId">Dispositivo do usuário.</param>
+        /// <returns></returns>
         public RefreshToken GenerateRefreshToken(Guid userId, Guid? deviceId)
         {
             return new RefreshToken()
@@ -72,6 +83,11 @@ namespace _3dShop.Api.Helpers
             };
         }
 
+        /// <summary>
+        /// Revoga um RefreshToken definindo RevoketAt e ReplacedByToken do token existente.
+        /// </summary>
+        /// <param name="oldToken">Token antigo</param>
+        /// <param name="newToken">Token novo (preenche o campo ReplacedByToken)</param>
         public void RevokeRefreshToken(RefreshToken oldToken, string newToken)
         {
             oldToken.RevokedAt = DateTime.UtcNow;
