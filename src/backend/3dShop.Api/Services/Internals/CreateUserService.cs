@@ -18,7 +18,20 @@ namespace _3dShop.Api.Services.Internals
             _jwtHelper = jwtHelper;
         }
 
-        public async Task<CreateUserResponse> CreateUserAsync(CreateUserRequest newUserRequest, UserRole role, CancellationToken cancellationToken, Guid? deviceId = null)
+        /// <summary>
+        /// Core da criação do usuário. Externalizado para utilização pelos endpoints /auth/register e /user/register
+        /// </summary>
+        /// <param name="newUserRequest">Dados do usuário.</param>
+        /// <param name="role">Role do usuário.</param>
+        /// <param name="deviceId">Dispositivo do usuário.</param>
+        /// <param name="cancellationToken">Token de cancelamento</param>
+        /// <returns>Retorna Id, Nome, Email e Tokens do usuário.</returns>
+        /// <exception cref="BadRequestException"></exception>
+        public async Task<CreateUserResponse> CreateUserAsync(
+            CreateUserRequest newUserRequest, 
+            UserRole role, 
+            CancellationToken cancellationToken,
+            Guid? deviceId = null)
         {
             var userExist = await _context.Users
                 .AsNoTracking()

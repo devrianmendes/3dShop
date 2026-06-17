@@ -14,6 +14,13 @@ namespace _3dShop.Api.Services
             _context = context;
         }
 
+        /// <summary>
+        /// Service de criação de uma nova categoria.
+        /// </summary>
+        /// <param name="newCategoryRequest">Dados da nova categoria.</param>
+        /// <param name="cancellationToken">Token de cancelamento.</param>
+        /// <returns>Retorna id e nome da nova categoria.</returns>
+        /// <exception cref="BadRequestException"></exception>
         public async Task<CreateCategoryResponse> CreateCategoryAsync(CategoryNamesBase newCategoryRequest, CancellationToken cancellationToken)
         { 
             var categoryExist = await _context.Categories.AnyAsync(c =>
@@ -42,6 +49,11 @@ namespace _3dShop.Api.Services
             };
         }
 
+        /// <summary>
+        /// Service de busca de todas as categorias existentes.
+        /// </summary>
+        /// <param name="cancellationToken">Token de cancelamento</param>
+        /// <returns>Lista de todas as categorias (sem produtos inclusos) criadas.</returns>
         public async Task<CategoryListResponse> GetAllCategoriesAsync(CancellationToken cancellationToken)
         {
             return new CategoryListResponse()
@@ -58,6 +70,13 @@ namespace _3dShop.Api.Services
             };
         }
 
+        /// <summary>
+        /// Service de busca de uma categoria individual.
+        /// </summary>
+        /// <param name="categoryId">Id da categoria.</param>
+        /// <param name="cancellationToken">Token de cancelamento.</param>
+        /// <returns>Dados da categoria buscada.</returns>
+        /// <exception cref="NotFoundException"></exception>
         public async Task<GetCategoryResponse> GetCategoryByIdAsync(Guid categoryId, CancellationToken cancellationToken)
         {
             var requestedCategory = await _context.Categories
@@ -77,6 +96,15 @@ namespace _3dShop.Api.Services
             };
         }
 
+        /// <summary>
+        /// Service para atualizar uma categoria existente.
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <param name="updateCategoryRequest"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="BadRequestException"></exception>
         public async Task<UpdateCategoryResponse> UpdateCategoryAsync(Guid categoryId, UpdateCategoryRequest updateCategoryRequest, CancellationToken cancellationToken)
         {
             var category = await _context.Categories
@@ -112,6 +140,14 @@ namespace _3dShop.Api.Services
             };
         }
 
+        /// <summary>
+        /// Service para deletar uma categoria sem produtos vinculados.
+        /// </summary>
+        /// <param name="categoryId">Id da categoria.</param>
+        /// <param name="cancellationToken">Token de cancelamento.</param>
+        /// <returns>Sem retorno.</returns>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="BadRequestException"></exception>
         public async Task DeleteCategoryAsync(Guid categoryId, CancellationToken cancellationToken)
         {
             var category = await _context.Categories
