@@ -1,6 +1,6 @@
 ---
-name: 🚀 Próximos Passos
-about: Template padrão para planejar novas tarefas e etapas do projeto.
+name: 🚀 Next steps
+about: Template padrão para planejar novas tarefas e etapas do projeto Default template to plan new tasks and steps.
 title: '[TASK] '
 labels: enhancement, chore
 assignees: ''
