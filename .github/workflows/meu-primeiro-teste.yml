@@ -3,7 +3,7 @@ name: Validar API Web .NET
 # O robô vai rodar sempre que houver push na branch main
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
   build-api:
