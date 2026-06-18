@@ -1,0 +1,20 @@
+name: Meu Primeiro Robô
+
+# 1. GATILHO: Acorda sempre que houver um push em qualquer branch
+on: [push]
+
+jobs:
+  rodar-tarefas:
+    # 2. COMPUTADOR: Liga uma máquina virtual com Linux Ubuntu
+    runs-on: ubuntu-latest
+
+    # 3. PASSOS: O que o robô vai digitar no terminal dessa máquina
+    steps:
+      - name: Passo 1 - Dar as boas-vindas
+        run: echo "Iniciando os testes do projeto..."
+
+      - name: Passo 2 - Mostrar a data atual
+        run: date
+
+      - name: Passo 3 - Finalizar com sucesso
+        run: echo "O GitHub Actions funcionou perfeitamente!"
