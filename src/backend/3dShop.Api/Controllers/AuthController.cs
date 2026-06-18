@@ -10,7 +10,6 @@ namespace _3dShop.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        //private readonly JwtHelper _jwtHelper;
         private readonly AuthService _authService;
         private readonly IValidator<UserRequestBase> _validator; //Interface fornecida pelo fluent validation
 
