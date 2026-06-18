@@ -1,20 +1,30 @@
-name: Meu Primeiro Robô
+name: Validar API Web .NET
 
-# 1. GATILHO: Acorda sempre que houver um push em qualquer branch
-on: [push]
+# O robô vai rodar sempre que houver push na branch main
+on:
+  push:
+    branches: [ "main" ]
 
 jobs:
-  rodar-tarefas:
-    # 2. COMPUTADOR: Liga uma máquina virtual com Linux Ubuntu
-    runs-on: ubuntu-latest
+  build-api:
+    # Mudamos para Linux (Ubuntu), que inicia e roda muito mais rápido
+    runs-on: ubuntu-latest 
 
-    # 3. PASSOS: O que o robô vai digitar no terminal dessa máquina
     steps:
-      - name: Passo 1 - Dar as boas-vindas
-        run: echo "Iniciando os testes do projeto..."
+    # Passo 1: Baixa o código da API para a máquina do GitHub
+    - name: Baixar o código do repositório
+      uses: actions/checkout@v4
 
-      - name: Passo 2 - Mostrar a data atual
-        run: date
+    # Passo 2: Instala o SDK do .NET
+    - name: Configurar o ambiente .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0 # Ajuste para a versão da sua API (ex: 6.0, 7.0, 8.0)
 
-      - name: Passo 3 - Finalizar com sucesso
-        run: echo "O GitHub Actions funcionou perfeitamente!"
+    # Passo 3: Restaura os pacotes NuGet da sua API
+    - name: Restaurar dependências (NuGet)
+      run: dotnet restore
+
+    # Passo 4: Compila a API Web
+    - name: Compilar a API Web (Build)
+      run: dotnet build --no-restore --configuration Release
