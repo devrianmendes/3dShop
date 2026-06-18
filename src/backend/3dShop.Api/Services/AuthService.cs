@@ -3,7 +3,6 @@ using _3dShop.Api.Exceptions;
 using _3dShop.Api.Helpers;
 using _3dShop.Api.Models.DTOs;
 using _3dShop.Api.Models.Entities;
-using _3dShop.Api.Models.Enums;
 using _3dShop.Api.Services.Internals;
 using Microsoft.EntityFrameworkCore;
 
