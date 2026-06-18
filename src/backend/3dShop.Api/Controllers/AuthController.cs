@@ -1,12 +1,7 @@
-﻿using _3dShop.Api.Exceptions;
-using _3dShop.Api.Helpers;
-using _3dShop.Api.Models.DTOs;
-using _3dShop.Api.Models.Entities;
+﻿using _3dShop.Api.Models.DTOs;
 using _3dShop.Api.Services;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static _3dShop.Api.Services.AuthService;
 
 namespace _3dShop.Api.Controllers
 {
