@@ -16,7 +16,6 @@ namespace _3dShop.Api.Controllers
         public AuthController(ILogger<AuthController> logger, /*JwtHelper jwtHelper,*/ IValidator<UserRequestBase> validator, AuthService authService)
         {
             _logger = logger;
-            //_jwtHelper = jwtHelper;
             _validator = validator;
             _authService = authService;
         }
