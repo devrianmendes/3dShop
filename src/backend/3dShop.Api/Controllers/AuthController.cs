@@ -20,6 +20,7 @@ namespace _3dShop.Api.Controllers
             _authService = authService;
         }
 
+        //teste
         [HttpPost("signin")]
         [ProducesResponseType<AuthUserResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
