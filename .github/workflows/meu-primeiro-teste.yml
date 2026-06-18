@@ -28,3 +28,9 @@ jobs:
     # Passo 4: Compila a API Web
     - name: Compilar a API Web (Build)
       run: dotnet build --no-restore --configuration Release
+
+      # PASSO 5 (NOVO): Pega o segredo do site e roda os seus testes conectando no banco
+    - name: Rodar Testes de Integração com o Banco
+      run: dotnet test --no-build --configuration Release
+      env:
+        ConnectionStrings__DefaultConnection: ${{ secrets.MINHA_CONNECTION_STRING }}
