@@ -11,7 +11,13 @@ namespace _3dShop.Api.Services
             _createUserService = createUserService;
         }
 
-        //Service externalizado para prevenir duplicação de código, pois criar um admin/seller e um usuário normal é exatamente o mesmo código, com exceção da role
+        /// <summary>
+        /// Service para criação de novos usuários (apenas empregados, criados por um admin)
+        /// </summary>
+        /// <param name="createUserRequest">Dados do usuário.</param>
+        /// <param name="cancellationToken">Token de cancelamento.</param>
+        /// <returns></returns>
+        //
         public async Task<CreateUserResponse> CreateEmployeeAsync(CreateUserRequest createUserRequest, CancellationToken cancellationToken)
         {
             return await _createUserService.CreateUserAsync(createUserRequest, createUserRequest.UserRole, cancellationToken);
