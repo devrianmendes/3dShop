@@ -7,10 +7,11 @@ namespace _3dShop.Api.Middlewares
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next) //Recebe o próximo middleware para permitir a partida para o proximo passo do pipeline
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger) //Recebe o próximo middleware para permitir a partida para o proximo passo do pipeline
         {
-            _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context) //Método responsável por capturar exceções lançadas durante a requisição
@@ -51,9 +52,7 @@ namespace _3dShop.Api.Middlewares
                     }).ToList()
                 };
                 return context.Response.WriteAsJsonAsync(errorList);
-            }
-            else
-            {
+            } else {
                 var response = new ExceptionErrorResponse
                 {
                     StatusCode = context.Response.StatusCode,
@@ -62,9 +61,13 @@ namespace _3dShop.Api.Middlewares
                         : exception.Message
                 };
 
+                _logger.LogError(exception, exception.Message,
+                    context.Request.Method,
+                    context.Request.Path);
+
                 return context.Response.WriteAsJsonAsync(response);
             }
 
-        }
+        } 
     }
 }

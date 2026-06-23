@@ -40,6 +40,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CategoryValidator>(); //Com
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CreateUserService>();
 builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<ProductService>();
 
 //Configuração do swagger para rodar com JWT
 builder.Services.AddSwaggerGen(options =>

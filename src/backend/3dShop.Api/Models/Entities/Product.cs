@@ -12,7 +12,7 @@
         
         //Relations
         public required Guid CategoryId { get; set; } //FK
-        public required Category Category { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
+        public Category? Category { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
 
         public ICollection<ProductImage>? ProductImageList { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
         public ICollection<OrderItem>? OrderItemList { get; set; } //Navegação - Facilita acesso a entidade relacionada no código
