@@ -14,7 +14,30 @@ namespace _3dShop.Api.Services
             _context = context;
         }
 
-        public async Task<CreateProductResponseDTOs> CreateProductServiceAsync(CreateProductResquestDTOs productData)
+        public async Task<GetProductResponse> GetProductById(Guid productId)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
+            if(product is null)
+            {
+                throw new NotFoundException("Produto não encontrado.");
+            }
+
+            return new GetProductResponse()
+            {
+                NamePt = product.NamePt,
+                NameEn = product.NameEn,
+                DescriptionPt = product.DescriptionPt,
+                DescriptionEn = product.DescriptionEn,
+                Price = product.Price,
+                IsCustom = product.IsCustom,
+                IsActive = product.IsActive,
+                CategoryId = product.CategoryId,
+                ProductImageList = product.ProductImageList,
+            };
+        }
+
+        public async Task<CreateProductResponse> CreateProductServiceAsync(CreateProductResquest productData)
         {
             var productExist = await _context.Products.AnyAsync(p => p.NamePt.Trim().ToLower() == productData.NamePt.Trim().ToLower());
 
@@ -40,15 +63,16 @@ namespace _3dShop.Api.Services
                 IsActive = productData.IsActive,
                 IsCustom = productData.IsCustom,
                 Price = productData.Price,
-                //ProductImageList = productData.ProductImageList
+                ProductImageList = productData.ProductImageList
             };
 
             await _context.Products.AddAsync(newProduct);
             await _context.SaveChangesAsync();
 
-            return new CreateProductResponseDTOs(
-                newProduct.Id
-            );
+            return new CreateProductResponse()
+            {
+                Id = newProduct.Id
+            };            
         }
     }
 }

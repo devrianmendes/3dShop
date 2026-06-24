@@ -12,6 +12,7 @@ namespace _3dShop.Api.Middlewares
         public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger) //Recebe o próximo middleware para permitir a partida para o proximo passo do pipeline
         {
             _logger = logger;
+            _next = next;
         }
 
         public async Task InvokeAsync(HttpContext context) //Método responsável por capturar exceções lançadas durante a requisição
@@ -53,19 +54,28 @@ namespace _3dShop.Api.Middlewares
                 };
                 return context.Response.WriteAsJsonAsync(errorList);
             } else {
-                var response = new ExceptionErrorResponse
+                //var response = new ExceptionErrorResponse
+                //{
+                //    StatusCode = context.Response.StatusCode,
+                //    Message = context.Response.StatusCode == 500
+                //        ? "Erro interno no servidor"
+                //        : exception.Message
+                //};
+
+                //_logger.LogError(exception, exception.Message,
+                //    context.Request.Method,
+                //    context.Request.Path);
+
+                //return context.Response.WriteAsJsonAsync(response);
+                var generic = new
                 {
                     StatusCode = context.Response.StatusCode,
-                    Message = context.Response.StatusCode == 500
-                        ? "Erro interno no servidor"
-                        : exception.Message
+                    Message = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    idk = exception.InnerException
                 };
 
-                _logger.LogError(exception, exception.Message,
-                    context.Request.Method,
-                    context.Request.Path);
-
-                return context.Response.WriteAsJsonAsync(response);
+                return context.Response.WriteAsJsonAsync(generic);
             }
 
         } 

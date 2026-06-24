@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace _3dShop.Api.Validators
 {
-    public class ProductValidator : AbstractValidator<CreateProductResquestDTOs>
+    public class ProductValidator : AbstractValidator<CreateProductResquest>
     {
         public ProductValidator()
         {
