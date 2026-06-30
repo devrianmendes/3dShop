@@ -14,7 +14,7 @@ namespace _3dShop.Api.Services
             _context = context;
         }
 
-        public async Task<GetProductListResponse> GetAllProductsAsync() 
+        public async Task<GetProductListResponse> GetAllProductsAsync(CancellationToken cancellationToken)
         {
             return new GetProductListResponse()
             {
@@ -30,15 +30,17 @@ namespace _3dShop.Api.Services
                     IsActive = e.IsActive,
                     CategoryId = e.CategoryId,
                     ProductImageList = e.ProductImageList,
-                }).ToListAsync()
+                }).ToListAsync(cancellationToken)
             };
         }
 
-        public async Task<GetProductResponse> GetProductByIdAsync(Guid productId)
+        public async Task<GetProductResponse> GetProductByIdAsync(Guid productId, CancellationToken cancellationToken)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+            var product = await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
 
-            if(product is null)
+            if (product is null)
             {
                 throw new NotFoundException("Produto não encontrado.");
             }
@@ -58,37 +60,16 @@ namespace _3dShop.Api.Services
             };
         }
 
-        public async Task<string> GetAllProductsServiceAsync()
+        public async Task<CreateProductResponse> CreateProductServiceAsync(CreateProductResquest productData, CancellationToken cancellationToken)
         {
-            var teste = await _context.Products
-                .AsNoTracking()
-                .Select(e => new GetProductResponse
-                {
-                    Id = e.Id,
-                    CategoryId = e.CategoryId,
-                    DescriptionEn = e.DescriptionEn,
-                    DescriptionPt = e.DescriptionPt,
-                    IsActive = e.IsActive,
-                    IsCustom = e.IsCustom,
-                    NameEn = e.NameEn,
-                    NamePt = e.NamePt,
-                    Price = e.Price,
-                    ProductImageList = e.ProductImageList
-                }).ToListAsync();
-
-            return "a";
-        }
-
-        public async Task<CreateProductResponse> CreateProductServiceAsync(CreateProductResquest productData)
-        {
-            var productExist = await _context.Products.AnyAsync(p => p.NamePt.Trim().ToLower() == productData.NamePt.Trim().ToLower());
+            var productExist = await _context.Products.AsNoTracking().AnyAsync(p => p.NamePt.Trim().ToLower() == productData.NamePt.Trim().ToLower(), cancellationToken);
 
             if (productExist)
             {
                 throw new BadRequestException("Produto já cadastrado.");
             }
 
-            var categoryExist = await _context.Categories.AnyAsync(c => c.Id == productData.CategoryId);
+            var categoryExist = await _context.Categories.AsNoTracking().AnyAsync(c => c.Id == productData.CategoryId, cancellationToken);
 
             if (!categoryExist)
             {
@@ -109,13 +90,54 @@ namespace _3dShop.Api.Services
                 ProductImageList = productData.ProductImageList
             };
 
-            await _context.Products.AddAsync(newProduct);
-            await _context.SaveChangesAsync();
+            await _context.Products.AddAsync(newProduct, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
             return new CreateProductResponse()
             {
                 Id = newProduct.Id
-            };            
+            };
+        }
+
+        public async Task<UpdateProductResponse> UpdateProductAsync(UpdateProductRequest updateProductRequest, CancellationToken cancellationToken)
+        {
+            var productExist = await _context.Products.AsNoTracking().FirstOrDefaultAsync(e => e.Id == updateProductRequest.Id, cancellationToken);
+
+            if (productExist is null) throw new NotFoundException("Produto não encontrado.");
+
+            var productWithSameName = await _context.Products.AsNoTracking().AnyAsync(e => e.Id != updateProductRequest.Id && (
+                e.NameEn.Trim().ToLowerInvariant() == updateProductRequest.NameEn.Trim().ToLowerInvariant() ||
+                e.NamePt.Trim().ToLowerInvariant() == updateProductRequest.NamePt.Trim().ToLowerInvariant()
+            ), cancellationToken);
+
+            if (productWithSameName is true) throw new BadRequestException("Nome já utilizado.");
+
+            productExist.Id = updateProductRequest.Id;
+            productExist.NamePt = updateProductRequest.NamePt;
+            productExist.NameEn = updateProductRequest.NameEn;
+            productExist.DescriptionPt = updateProductRequest.DescriptionPt;
+            productExist.DescriptionEn = updateProductRequest.DescriptionEn;
+            productExist.Price = updateProductRequest.Price;
+            productExist.IsActive = updateProductRequest.IsActive;
+            productExist.IsCustom = updateProductRequest.IsCustom;
+            productExist.CategoryId = updateProductRequest.CategoryId;
+            productExist.ProductImageList = updateProductRequest.ProductImageList;
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return (new UpdateProductResponse()
+            {
+                Id = updateProductRequest.Id,
+                NamePt = updateProductRequest.NamePt,
+                NameEn = updateProductRequest.NameEn,
+                DescriptionPt = updateProductRequest.DescriptionPt,
+                DescriptionEn = updateProductRequest.DescriptionEn,
+                Price = updateProductRequest.Price,
+                IsActive = updateProductRequest.IsActive,
+                IsCustom = updateProductRequest.IsCustom,
+                CategoryId = updateProductRequest.CategoryId,
+                ProductImageList = updateProductRequest.ProductImageList,
+            });
         }
     }
 }
