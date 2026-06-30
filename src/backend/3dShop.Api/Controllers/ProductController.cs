@@ -21,9 +21,9 @@ namespace _3dShop.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType<GetAllProductsResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<GetProductListResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<GetAllProductsResponse>> GetAllProductsAsync()
+        public async Task<ActionResult<GetProductListResponse>> GetAllProductsAsync()
         {
             return Ok(await _productService.GetAllProductsAsync());
         }

@@ -14,11 +14,11 @@ namespace _3dShop.Api.Services
             _context = context;
         }
 
-        public async Task<GetAllProductsResponse> GetAllProductsAsync() 
+        public async Task<GetProductListResponse> GetAllProductsAsync() 
         {
-            return new GetAllProductsResponse()
+            return new GetProductListResponse()
             {
-                AllProducts = await _context.Products.Select(e => new GetProductResponse()
+                Products = await _context.Products.Select(e => new GetProductResponse()
                 {
                     Id = e.Id,
                     NamePt = e.NamePt,
