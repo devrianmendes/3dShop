@@ -21,6 +21,8 @@ namespace _3dShop.Api.Controllers
         }
 
         [HttpGet("{productId:Guid}", Name = "GetProductById")]
+        [ProducesResponseType<GetProductResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetProductResponse>> GetProductById([FromRoute] Guid productId)
         {
             if(productId == Guid.Empty)
@@ -30,6 +32,13 @@ namespace _3dShop.Api.Controllers
             GetProductResponse product = await _productService.GetProductById(productId);
 
             return Ok(product);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<GetProductListResponse>> GetAllProducts()
+        {
+            //var teste = await _productService.GetAllProductsServiceAsync();
+            return Ok(await _productService.GetAllProductsServiceAsync());
         }
 
         [HttpPost]

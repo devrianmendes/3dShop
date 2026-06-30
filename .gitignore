@@ -365,3 +365,4 @@ FodyWeavers.xsd
 plan.md
 er-diagram.md
 src/backend/3dShop.Api/appsettings.json
+src/backend/3dShop.Api/appsettings.Development.json

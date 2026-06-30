@@ -9,6 +9,7 @@ namespace _3dShop.Api.Models.DTOs
 
     public record BaseProductResponse
     {
+        public required Guid Id { get; init; }
         public required string NamePt { get; init; }
         public required string NameEn { get; init; }
         public required string DescriptionPt { get; init; }
@@ -24,4 +25,9 @@ namespace _3dShop.Api.Models.DTOs
     public record CreateProductResponse : BaseProductRequest;
     public record GetProductRequest : BaseProductRequest;
     public record GetProductResponse : BaseProductResponse;
+
+    public record GetProductListResponse
+    {
+        public required IEnumerable<GetProductResponse> Products { get; init; }
+    }
 }

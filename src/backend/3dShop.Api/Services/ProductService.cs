@@ -25,6 +25,7 @@ namespace _3dShop.Api.Services
 
             return new GetProductResponse()
             {
+                Id = product.Id,
                 NamePt = product.NamePt,
                 NameEn = product.NameEn,
                 DescriptionPt = product.DescriptionPt,
@@ -35,6 +36,27 @@ namespace _3dShop.Api.Services
                 CategoryId = product.CategoryId,
                 ProductImageList = product.ProductImageList,
             };
+        }
+
+        public async Task<string> GetAllProductsServiceAsync()
+        {
+            var teste = await _context.Products
+                .AsNoTracking()
+                .Select(e => new GetProductResponse
+                {
+                    Id = e.Id,
+                    CategoryId = e.CategoryId,
+                    DescriptionEn = e.DescriptionEn,
+                    DescriptionPt = e.DescriptionPt,
+                    IsActive = e.IsActive,
+                    IsCustom = e.IsCustom,
+                    NameEn = e.NameEn,
+                    NamePt = e.NamePt,
+                    Price = e.Price,
+                    ProductImageList = e.ProductImageList
+                }).ToListAsync();
+
+            return "a";
         }
 
         public async Task<CreateProductResponse> CreateProductServiceAsync(CreateProductResquest productData)
