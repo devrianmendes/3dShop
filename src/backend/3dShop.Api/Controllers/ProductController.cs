@@ -20,16 +20,27 @@ namespace _3dShop.Api.Controllers
             _productService = productService;
         }
 
-        [HttpGet("{productId:Guid}", Name = "GetProductById")]
+        [HttpGet]
+        [ProducesResponseType<GetAllProductsResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<GetAllProductsResponse>> GetAllProductsAsync()
+        {
+            return Ok(await _productService.GetAllProductsAsync());
+        }
+
+        
+        [HttpGet("{productId:Guid}", Name = "GetProductByIdAsync")]
+        //[Authorize(Roles = "Admin, Seller")]
         [ProducesResponseType<GetProductResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GetProductResponse>> GetProductById([FromRoute] Guid productId)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<GetProductResponse>> GetProductByIdAsync([FromRoute] Guid productId)
         {
             if(productId == Guid.Empty)
             {
                 throw new BadRequestException("Produto inválido.");
             }
-            GetProductResponse product = await _productService.GetProductById(productId);
+            GetProductResponse product = await _productService.GetProductByIdAsync(productId);
 
             return Ok(product);
         }
@@ -44,9 +55,9 @@ namespace _3dShop.Api.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Seller")]
         [ProducesResponseType<CreateProductResponse>(StatusCodes.Status201Created)]
-        [ProducesResponseType<CreateProductResponse>(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType<CreateProductResponse>(StatusCodes.Status404NotFound)]
-        [ProducesResponseType<CreateProductResponse>(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<CreateProductResponse>> CreateProduct(CreateProductResquest createProductResquest)
         {
             _validator.ValidateAndThrow(createProductResquest);
@@ -54,8 +65,8 @@ namespace _3dShop.Api.Controllers
             var createdProduct = await _productService.CreateProductServiceAsync(createProductResquest);
 
             return CreatedAtRoute(
-                nameof(GetProductById),
-                new { productId = createdProduct},
+                nameof(GetProductByIdAsync),
+                new { productId = createdProduct.Id},
                 createdProduct
             );
         }

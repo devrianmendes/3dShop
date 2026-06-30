@@ -1,6 +1,8 @@
 ﻿using _3dShop.Api.Errors;
 using _3dShop.Api.Exceptions;
 using FluentValidation;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace _3dShop.Api.Middlewares
 {
@@ -67,15 +69,28 @@ namespace _3dShop.Api.Middlewares
                 //    context.Request.Path);
 
                 //return context.Response.WriteAsJsonAsync(response);
-                var generic = new
+                //var generic = new
+                //{
+                //    StatusCode = context.Response.StatusCode,
+                //    Message = exception.Message,
+                //    StackTrace = exception.StackTrace,
+                //    idk = exception.InnerException
+                //};
+
+                var cont = context;
+                var ex = exception;
+
+                var problemDetails = new ProblemDetails
                 {
-                    StatusCode = context.Response.StatusCode,
-                    Message = exception.Message,
-                    StackTrace = exception.StackTrace,
-                    idk = exception.InnerException
+                    Type = "",
+                    Title = exception.Message,
+                    Status = context.Response.StatusCode,
+                    Detail = "Seu usuário está autenticado, mas não possui as permissões necessárias para acessar este endpoint.",
+                    Instance = context.Request.Path.Value,
+                    //Extensions = new Dictionary<string, object?> { { "code", "ACCESS_DENIED" } }
                 };
 
-                return context.Response.WriteAsJsonAsync(generic);
+                return context.Response.WriteAsJsonAsync(problemDetails);
             }
 
         } 

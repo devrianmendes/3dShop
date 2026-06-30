@@ -14,7 +14,27 @@ namespace _3dShop.Api.Services
             _context = context;
         }
 
-        public async Task<GetProductResponse> GetProductById(Guid productId)
+        public async Task<GetAllProductsResponse> GetAllProductsAsync() 
+        {
+            return new GetAllProductsResponse()
+            {
+                AllProducts = await _context.Products.Select(e => new GetProductResponse()
+                {
+                    Id = e.Id,
+                    NamePt = e.NamePt,
+                    NameEn = e.NameEn,
+                    DescriptionPt = e.DescriptionPt,
+                    DescriptionEn = e.DescriptionEn,
+                    Price = e.Price,
+                    IsCustom = e.IsCustom,
+                    IsActive = e.IsActive,
+                    CategoryId = e.CategoryId,
+                    ProductImageList = e.ProductImageList,
+                }).ToListAsync()
+            };
+        }
+
+        public async Task<GetProductResponse> GetProductByIdAsync(Guid productId)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
 
@@ -77,6 +97,7 @@ namespace _3dShop.Api.Services
 
             Product newProduct = new()
             {
+                Id = Guid.NewGuid(),
                 NamePt = productData.NamePt,
                 NameEn = productData.NameEn,
                 DescriptionPt = productData.DescriptionPt,

@@ -18,8 +18,8 @@ namespace _3dShop.Api.Controllers
             _categoryService = categoryService;
         }
 
-        [Authorize(Roles = "Admin, Seller")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
         [HttpPost]
+        [Authorize(Roles = "Admin, Seller")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
         [ProducesResponseType<CreateCategoryResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -37,7 +37,7 @@ namespace _3dShop.Api.Controllers
             );
         }
 
-        [Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
+        //[Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
         [ProducesResponseType<CategoryListResponse>(StatusCodes.Status200OK)]
         [HttpGet]
         public async Task<ActionResult> GetAllAsync(CancellationToken cancellationToken)
@@ -47,7 +47,7 @@ namespace _3dShop.Api.Controllers
             return Ok(categories);
         }
 
-        [Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
+        //[Authorize(Roles = "Admin, Seller, Customer")] //UseAuthorization só permitira acesso a essa rota por pessoas logadas, com tokens validos e com roles permitidas
         [ProducesResponseType<GetCategoryResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{CategoryId:guid}", Name = "GetByIdAsync")]

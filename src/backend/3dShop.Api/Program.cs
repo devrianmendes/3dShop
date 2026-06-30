@@ -10,7 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Serilog;
+using System.Data;
 using System.Text;
+using YourProject.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,52 +61,59 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Configurando o UseAuthentication para usar o JwtBearer na validação e autenticação do token enviado na requisição
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(options =>
-{
-    var jwt = builder.Configuration.GetSection("JwtSettings");
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//.AddJwtBearer(options =>
+//{
+//    var jwt = builder.Configuration.GetSection("JwtSettings");
 
-    options.TokenValidationParameters = new TokenValidationParameters
-    { 
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ClockSkew = TimeSpan.Zero, //Remove tolerância de expiração, sem isso, o token vale por mais alguns minutos além do tempo definido (secrets)
-        ValidIssuer = jwt["Issuer"],
-        ValidAudience = jwt["Audience"],
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    { 
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        ClockSkew = TimeSpan.Zero, //Remove tolerância de expiração, sem isso, o token vale por mais alguns minutos além do tempo definido (secrets)
+//        ValidIssuer = jwt["Issuer"],
+//        ValidAudience = jwt["Audience"],
 
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwt["Secret"]))
-    };
+//        IssuerSigningKey = new SymmetricSecurityKey(
+//            Encoding.UTF8.GetBytes(jwt["Secret"]))
+//    };
 
-    options.Events = new JwtBearerEvents
-    {
-        OnChallenge = async context =>
-        {
-            context.HandleResponse();
-             
-              context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            context.Response.ContentType = "application/json";
+//    options.Events = new JwtBearerEvents
+//    {
+//        OnChallenge = async context => //Disparado quando o usuário tenta acessar um recurso protegido (com [Authorize]), mas o token é ausente, inválido, malformado ou expirado.
+//        {
+//            context.HandleResponse();
 
-            await context.Response.WriteAsJsonAsync(new
-            {
-                message = "Você precisa estar autenticado para acessar este recurso."
-            });
-        },
+//            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+//            context.Response.ContentType = "application/json";
 
-        OnForbidden = async context =>
-        {
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            context.Response.ContentType = "application/json";
+//            await context.Response.WriteAsJsonAsync(new
+//            {
+//                //message2 = context.ErrorDescription,
+//                success = false,
+//                message = "Você precisa estar autenticado para acessar este recurso.",
+//                errorMessage = context.Error,
+//                //errorDetails = context.AuthenticateFailure?.Message,
+//            });
+//            //COLOCAR LOG AQUI
+//        },
 
-            await context.Response.WriteAsJsonAsync(new
-            {
-                message = "Você não possui permissão para acessar este recurso."
-            });
-        }
-    };
-});
+//        OnForbidden = async context => //É disparado quando o usuário está autenticado(o token é válido), mas ele não tem a permissão necessária(falhou em um teste de Role ou Policy).
+//        {
+//            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+//            context.Response.ContentType = "application/json";
+
+//            await context.Response.WriteAsJsonAsync(new
+//            {
+//                message = "Você não possui permissão para acessar este recurso.",
+//            });
+//        }
+//    };
+//});
+
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 //Context
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(conString)); //Context
